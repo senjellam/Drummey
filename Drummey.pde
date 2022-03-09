@@ -2,12 +2,15 @@ import oscP5.*;
 import netP5.*;
 import controlP5.*;
 
-OscP5 oscP5;
-ControlP5 cp5;
-NetAddress myRemoteLocation;
+OscP5 OP5;
+ControlP5 CP5;
+NetAddress netAdd;
 
+// VERSION NUMBER
 String version = "0.1.0";
+// MODE SELECT
 int switchMode = 0; // 0=Jazz 1= Rock 2=Fusion
+// PLAY STATUS
 boolean playBass = false;
 boolean playSnare = false;
 boolean playTomTom1 = false;
@@ -15,25 +18,53 @@ boolean playTomTom2 = false;
 boolean playHiHat = false;
 boolean playRide = false;
 
+
 void setup() {
-  
   surface.setTitle("Drummey • " + "Version " + version);
   size(900, 600);
   frameRate(60);
   noStroke();
-  cp5 = new ControlP5(this);
-  oscP5 = new OscP5(this,4560);
-  myRemoteLocation = new NetAddress("127.0.0.1",4560);
-  
+  // INITIALIZE OSC, CONTROLS & NETWORK
+  CP5 = new ControlP5(this);
+  OP5 = new OscP5(this,4560);
+  netAdd = new NetAddress("127.0.0.1",4560);
+  // SELECT MODE BUTTONS
+  CP5 = new ControlP5(this);
+  CP5.addButton("Jazz Drums")
+     .setValue(1)
+     .setPosition(40,53)
+     .setSize(94,20)
+     .setColorBackground(#333333)
+     .setColorForeground(#c1272d)
+     ;
+  CP5.addButton("Rock Drums")
+     .setValue(1)
+     .setPosition(40,75)
+     .setSize(94,20)
+     .setColorBackground(#333333)
+     .setColorForeground(#c1272d)
+     ;
+  CP5.addButton("Fusion Drums")
+     .setValue(1)
+     .setPosition(40,97)
+     .setSize(94,20)
+     .setColorBackground(#333333)
+     .setColorForeground(#c1272d)
+     ;
 }
 
 
 void draw() {
   background(142, 142, 142);
-  
+  // CUSTOM FONT
   PFont montserrat = loadFont("Gotham-Medium-48.vlw");
   textFont(montserrat);
   
+  fill(51, 51, 51);
+  textSize(14);
+  text("Select Drums", 40, 46);
+  
+  // CHECK MODE
   if(switchMode == 0) {
     drawJazz();
   }
@@ -78,7 +109,7 @@ void keyPressed() {
   } else if(key != 'd' || key != 'D') {
       drum.add(0);
     }
-  oscP5.send(drum, myRemoteLocation);
+  OP5.send(drum, netAdd);
 }
 
 
@@ -90,6 +121,7 @@ void keyReleased() {
   if (key == 'p' || key == 'P') playRide = false;
   if (key == 'd' || key == 'D') playHiHat = false;
 }
+
 
 void drawJazz() {
   fill(51, 51, 51);
