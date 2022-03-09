@@ -1,4 +1,10 @@
+import oscP5.*;
+import netP5.*;
 import controlP5.*;
+
+OscP5 oscP5;
+ControlP5 cp5;
+NetAddress myRemoteLocation;
 
 String version = "0.1.0";
 int switchMode = 0; // 0=Jazz 1= Rock 2=Fusion
@@ -15,6 +21,9 @@ void setup() {
   size(900, 600);
   frameRate(60);
   noStroke();
+  cp5 = new ControlP5(this);
+  oscP5 = new OscP5(this,4560);
+  myRemoteLocation = new NetAddress("127.0.0.1",4560);
   
 }
 
@@ -32,12 +41,44 @@ void draw() {
 
 
 void keyPressed() {
-  if (key == ' ') playBass = true;
-  if (key == 'a' || key == 'A') playSnare = true;
-  if (key == 'w' || key == 'W') playTomTom1 = true;
-  if (key == 'ä' || key == 'Ä') playTomTom2 = true;
-  if (key == 'p' || key == 'P') playRide = true;
-  if (key == 'd' || key == 'D') playHiHat = true;
+  OscMessage drum = new OscMessage("/jazzDrums");
+  if (key == ' ') {
+    playBass = true;
+    drum.add(1);
+  } else if(key != ' ') {
+      drum.add(0);
+    }
+  if (key == 'a' || key == 'A') {
+    playSnare = true;
+    drum.add(1);
+  } else if(key != 'a' || key != 'A') {
+      drum.add(0);
+    }
+  if (key == 'w' || key == 'W') {
+    playTomTom1 = true;
+    drum.add(1);
+  } else if(key != 'w' || key != 'W') {
+      drum.add(0);
+    }
+  if (key == 'ä' || key == 'Ä') {
+    playTomTom2 = true;
+    drum.add(1);
+  } else if(key != 'ä' || key != 'Ä') {
+      drum.add(0);
+    }
+  if (key == 'p' || key == 'P') {
+    playRide = true;
+    drum.add(1);
+  } else if(key != 'p' || key != 'P') {
+      drum.add(0);
+    }
+  if (key == 'd' || key == 'D') {
+    playHiHat = true;
+    drum.add(1);
+  } else if(key != 'd' || key != 'D') {
+      drum.add(0);
+    }
+  oscP5.send(drum, myRemoteLocation);
 }
 
 
