@@ -53,7 +53,7 @@ void keyReleased() {
 void drawJazz() {
   fill(51, 51, 51);
   textSize(24);
-  text("Jazz Drums", (width/2)-70, 50);
+  text("Jazz Drums", (width/2)-75, 50);
   // BASS ------------------------------
   fill(204, 204, 204);
   rect((width/2)-127.5, 257, 255, 8);
