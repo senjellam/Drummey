@@ -24,21 +24,23 @@ void setup() {
   size(900, 600);
   frameRate(60);
   noStroke();
+  
   // INITIALIZE OSC, CONTROLS & NETWORK
   CP5 = new ControlP5(this);
   OP5 = new OscP5(this,4560);
   netAdd = new NetAddress("127.0.0.1",4560);
+  
   // SELECT MODE BUTTONS 
   CP5 = new ControlP5(this);
-  CP5.addButton("Fusion Drums")
-     .setValue(1)
-     .setPosition(49,57)
+  CP5.addButton("Jazz")
+     .setValue(2)
+     .setPosition(49,101)
      .setSize(79,20)
      .setColorBackground(#424242)
      .setColorForeground(#5b5959)
      .setColorActive(#cea228);
      ;
-  CP5.addButton("Rock Drums")
+   CP5.addButton("Rock")
      .setValue(1)
      .setPosition(49,79)
      .setSize(79,20)
@@ -46,15 +48,14 @@ void setup() {
      .setColorForeground(#5b5959)
      .setColorActive(#cea228);
      ;
-  CP5.addButton("Jazz Drums")
-     .setValue(1)
-     .setPosition(49,101)
+  CP5.addButton("Fusion")
+     .setValue(0)
+     .setPosition(49,57)
      .setSize(79,20)
      .setColorBackground(#424242)
      .setColorForeground(#5b5959)
      .setColorActive(#cea228);
      ;
-     
   CP5.addKnob("Volume")
      .setValue(50)
      .setPosition(794, 482)
@@ -68,30 +69,38 @@ void setup() {
 
 void draw() {
   background(43, 43, 43);
-  // CUSTOM FONT
-  //PFont fontBold = loadFont("Rajdhani-Bold.ttf");
-  //PFont fontRegular = loadFont("Rajdhani-Regular.ttf");
-  //textFont(fontRegular);
   PFont fontBold = loadFont("Calibri-Bold.vlw");
   textFont(fontBold);
-  
   
   fill(224, 224, 224);
   textSize(14);
   text("Select Drums", 50, 50);
   
-  
   // CHECK MODE
-  if(switchMode == 2) {
-    //textFont(fontBold);
-    drawJazz();
-  }
-  
-  // fill(66, 66, 66);
-  // rect((width/2)-400, 477, 800, 73, 10);
+  if(switchMode == 0) drawFusion();
+  if(switchMode == 1) drawRock();
+  if(switchMode == 2) drawJazz();
   
   fill(66, 66, 66);
   rect(789, 477, 60, 73, 10);
+}
+
+
+public void Jazz(int theValue) {
+  println("Mode: " + theValue + " (Jazz)");
+  switchMode = theValue;
+}
+
+
+public void Rock(int theValue) {
+  println("Mode: " + theValue + " (Rock)");
+  switchMode = theValue;
+}
+
+
+public void Fusion(int theValue) {
+  println("Mode: " + theValue + " (Fusion)");
+  switchMode = theValue;
 }
 
 
@@ -242,7 +251,7 @@ void drawJazz() {
   textSize(120);
   text("S", 289, 407); // A --> S
   // _________________________________________________________
-  // HIHAT ------------------------------
+  // HIHAT
   fill(226, 178, 59);
   ellipse(233, 300, 135, 135);
   fill(206, 162, 40);
@@ -254,4 +263,20 @@ void drawJazz() {
   fill(249, 204, 103);
   textSize(110);
   text("A", 200, 332); // D --> A
+}
+
+
+void drawRock() {
+  fill(224, 224, 224);
+  textSize(24);
+  String activeDrums = "Rock Drums";
+  text(activeDrums, (width/2-(textWidth(activeDrums)/2)), 55);
+}
+
+
+void drawFusion() {
+  fill(224, 224, 224);
+  textSize(24);
+  String activeDrums = "Fusion Drums";
+  text(activeDrums, (width/2-(textWidth(activeDrums)/2)), 55);
 }
