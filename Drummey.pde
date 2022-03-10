@@ -18,6 +18,7 @@ boolean playTomTom2 = false;
 boolean playHiHat = false;
 boolean playRide = false;
 
+float volume;
 
 void setup() {
   surface.setTitle("Drummey • " + "Version " + version);
@@ -103,42 +104,53 @@ public void Fusion(int theValue) {
   switchMode = theValue;
 }
 
+public void Volume(float theValue) {
+  println("Volume: " + theValue);
+  /*
+  OscMessage volume = new OscMessage("/volume");
+  volume.add(theValue);
+  OP5.send(volume, netAdd);
+  */
+  volume = theValue/100;
+  println("Volume: " + volume);
+}
+
 
 void keyPressed() {
   OscMessage drum = new OscMessage("/jazzDrums");
   if (key == ' ') {
     playBass = true;
-    drum.add(1);
+    drum.add(volume);
   } else if(key != ' ') {
       drum.add(0);
     }
   if (key == 's' || key == 'S') {
     playSnare = true;
-    drum.add(1);
+    drum.add(volume);
   } else if(key != 's' || key != 'S') {
       drum.add(0);
     }
   if (key == 'd' || key == 'D') {
     playTomTom1 = true;
-    drum.add(1);
+    drum.add(volume);
   } else if(key != 'd' || key != 'D') {
       drum.add(0);
     }
   if (key == 'j' || key == 'J') {
     playTomTom2 = true;
-    drum.add(1);
+    drum.add(volume);
   } else if(key != 'j' || key != 'J') {
       drum.add(0);
     }
   if (key == 'k' || key == 'K') {
     playRide = true;
-    drum.add(1);
+    drum.add(volume);
   } else if(key != 'k' || key != 'K') {
       drum.add(0);
     }
   if (key == 'a' || key == 'A') {
     playHiHat = true;
-    drum.add(1);
+    drum.add(volume);
   } else if(key != 'a' || key != 'A') {
       drum.add(0);
     }
