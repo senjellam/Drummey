@@ -7,9 +7,9 @@ ControlP5 CP5;
 NetAddress netAdd;
 
 // VERSION NUMBER
-String version = "0.1.0";
+String version = "2022";
 // MODE SELECT
-int switchMode = 0; // 0=Jazz 1= Rock 2=Fusion
+int switchMode = 2; // 0=Fusion 1= Rock 2=Jazz
 // PLAY STATUS
 boolean playBass = false;
 boolean playSnare = false;
@@ -28,46 +28,70 @@ void setup() {
   CP5 = new ControlP5(this);
   OP5 = new OscP5(this,4560);
   netAdd = new NetAddress("127.0.0.1",4560);
-  // SELECT MODE BUTTONS
+  // SELECT MODE BUTTONS 
   CP5 = new ControlP5(this);
-  CP5.addButton("Jazz Drums")
+  CP5.addButton("Fusion Drums")
      .setValue(1)
-     .setPosition(40,53)
-     .setSize(94,20)
-     .setColorBackground(#333333)
-     .setColorForeground(#c1272d)
+     .setPosition(49,57)
+     .setSize(79,20)
+     .setColorBackground(#424242)
+     .setColorForeground(#5b5959)
+     .setColorActive(#cea228);
      ;
   CP5.addButton("Rock Drums")
      .setValue(1)
-     .setPosition(40,75)
-     .setSize(94,20)
-     .setColorBackground(#333333)
-     .setColorForeground(#c1272d)
+     .setPosition(49,79)
+     .setSize(79,20)
+     .setColorBackground(#424242)
+     .setColorForeground(#5b5959)
+     .setColorActive(#cea228);
      ;
-  CP5.addButton("Fusion Drums")
+  CP5.addButton("Jazz Drums")
      .setValue(1)
-     .setPosition(40,97)
-     .setSize(94,20)
-     .setColorBackground(#333333)
-     .setColorForeground(#c1272d)
+     .setPosition(49,101)
+     .setSize(79,20)
+     .setColorBackground(#424242)
+     .setColorForeground(#5b5959)
+     .setColorActive(#cea228);
+     ;
+     
+  CP5.addKnob("Volume")
+     .setValue(50)
+     .setPosition(794, 482)
+     .setSize(50,50)
+     .setColorBackground(#5b5959)
+     .setColorForeground(#cea228)
+     .setColorActive(#e2b23b);
      ;
 }
 
 
 void draw() {
-  background(142, 142, 142);
+  background(43, 43, 43);
   // CUSTOM FONT
-  PFont montserrat = loadFont("Gotham-Medium-48.vlw");
-  textFont(montserrat);
+  //PFont fontBold = loadFont("Rajdhani-Bold.ttf");
+  //PFont fontRegular = loadFont("Rajdhani-Regular.ttf");
+  //textFont(fontRegular);
+  PFont fontBold = loadFont("Calibri-Bold.vlw");
+  textFont(fontBold);
   
-  fill(51, 51, 51);
+  
+  fill(224, 224, 224);
   textSize(14);
-  text("Select Drums", 40, 46);
+  text("Select Drums", 50, 50);
+  
   
   // CHECK MODE
-  if(switchMode == 0) {
+  if(switchMode == 2) {
+    //textFont(fontBold);
     drawJazz();
   }
+  
+  // fill(66, 66, 66);
+  // rect((width/2)-400, 477, 800, 73, 10);
+  
+  fill(66, 66, 66);
+  rect(789, 477, 60, 73, 10);
 }
 
 
@@ -79,34 +103,34 @@ void keyPressed() {
   } else if(key != ' ') {
       drum.add(0);
     }
-  if (key == 'a' || key == 'A') {
+  if (key == 's' || key == 'S') {
     playSnare = true;
     drum.add(1);
-  } else if(key != 'a' || key != 'A') {
-      drum.add(0);
-    }
-  if (key == 'w' || key == 'W') {
-    playTomTom1 = true;
-    drum.add(1);
-  } else if(key != 'w' || key != 'W') {
-      drum.add(0);
-    }
-  if (key == 'ä' || key == 'Ä') {
-    playTomTom2 = true;
-    drum.add(1);
-  } else if(key != 'ä' || key != 'Ä') {
-      drum.add(0);
-    }
-  if (key == 'p' || key == 'P') {
-    playRide = true;
-    drum.add(1);
-  } else if(key != 'p' || key != 'P') {
+  } else if(key != 's' || key != 'S') {
       drum.add(0);
     }
   if (key == 'd' || key == 'D') {
-    playHiHat = true;
+    playTomTom1 = true;
     drum.add(1);
   } else if(key != 'd' || key != 'D') {
+      drum.add(0);
+    }
+  if (key == 'j' || key == 'J') {
+    playTomTom2 = true;
+    drum.add(1);
+  } else if(key != 'j' || key != 'J') {
+      drum.add(0);
+    }
+  if (key == 'k' || key == 'K') {
+    playRide = true;
+    drum.add(1);
+  } else if(key != 'k' || key != 'K') {
+      drum.add(0);
+    }
+  if (key == 'a' || key == 'A') {
+    playHiHat = true;
+    drum.add(1);
+  } else if(key != 'a' || key != 'A') {
       drum.add(0);
     }
   OP5.send(drum, netAdd);
@@ -115,94 +139,119 @@ void keyPressed() {
 
 void keyReleased() {
   if (key == ' ') playBass = false;
-  if (key == 'a' || key == 'A') playSnare = false;
-  if (key == 'w' || key == 'W') playTomTom1 = false;
-  if (key == 'ä' || key == 'Ä') playTomTom2 = false;
-  if (key == 'p' || key == 'P') playRide = false;
-  if (key == 'd' || key == 'D') playHiHat = false;
+  if (key == 's' || key == 'S') playSnare = false;
+  if (key == 'd' || key == 'D') playTomTom1 = false;
+  if (key == 'j' || key == 'J') playTomTom2 = false;
+  if (key == 'k' || key == 'K') playRide = false;
+  if (key == 'a' || key == 'A') playHiHat = false;
 }
 
 
 void drawJazz() {
-  fill(51, 51, 51);
+  fill(224, 224, 224);
   textSize(24);
-  text("Jazz Drums", (width/2)-75, 50);
-  // BASS ------------------------------
+  String activeDrums = "Jazz Drums";
+  text(activeDrums, (width/2-(textWidth(activeDrums)/2)), 55);
+  // _________________________________________________________
+  // BASS
   fill(204, 204, 204);
-  rect((width/2)-127.5, 257, 255, 8);
-  fill(193, 39, 45);
-  rect((width/2)-127.5, 265, 255, 100);
+  rect((width/2)-127.5, 150, 255, 8, 30, 30, 0, 0);
+  fill(104, 77, 62);
+  rect((width/2)-127.5, 158, 255, 100);
   fill(204, 204, 204);
-  rect((width/2)-127.5, 365, 255, 8); 
-  fill(51, 51, 51);
-  rect((width/2)-25, 380, 50, 75);
-  fill(76, 76, 76);
-  rect((width/2)-25, 455, 50, 25);
+  rect((width/2)-127.5, 258, 255, 8, 0, 0, 30, 30);
+  fill(204, 204, 204);
+  ellipse((width/2)-1, 208, 26, 26);
+  //
+  pushMatrix();
+  translate((width/2)-1, 204);
+  rotate(radians(15));
+  fill(204, 204, 204);
+  rect(0, 0, 150, 8);
+  popMatrix();
+  //
+  pushMatrix();
+  translate((width/2)-1, 211);
+  rotate(radians(165));
+  fill(204, 204, 204);
+  rect(0, 0, 150, 8);
+  popMatrix();
+  //
+  fill(91, 91, 91);
+  rect((width/2)-25, 270, 50, 75, 7, 7, 0, 0);
+  fill(124, 124, 124);
+  rect((width/2)-25, 345, 50, 25, 0, 0, 7, 7);
   if(playBass == true) {
-    fill(226, 134, 145);
-    rect((width/2)-25, 380, 50, 75);
+    fill(242, 51, 88);
+    rect((width/2)-25, 270, 50, 75, 7, 7, 0, 0);
   }
   fill(198, 198, 198);
-  textSize(12);
-  text("SPACE", 429.5, 422);
-  // SNARE ------------------------------
+  textSize(15);
+  String keyBass = "SPACE";
+  text(keyBass, (width/2-(textWidth(keyBass)/2)), 315);
+  // _________________________________________________________
+  // TOMTOM 1
   fill(204, 204, 204);
-  ellipse(280, 420, 140, 140);
+  ellipse(350, 237, 120, 120);
   fill(199, 178, 153);
-  ellipse(280, 420, 124, 124);
-  if(playSnare == true) {
-    fill(226, 134, 145);
-    ellipse(280, 420, 124, 124);
-  }
-  fill(226, 208, 192);
-  textSize(72);
-  text("A", 252, 445);
-  // TOMTOM 1 ------------------------------
-  fill(204, 204, 204);
-  ellipse(315, 350, 100, 100);
-  fill(199, 178, 153);
-  ellipse(315, 350, 84, 84);
+  ellipse(350, 237, 104, 104);
   if(playTomTom1 == true) {
-    fill(226, 134, 145);
-    ellipse(315, 350, 84, 84);
+    fill(242, 51, 88);
+    ellipse(350, 237, 104, 104);
   }
-  fill(226, 208, 192);
-  textSize(48);
-  text("W", 289, 368);
-  // TOMTOM 2 ------------------------------
+  fill(237, 221, 206);
+  textSize(90);
+  text("D", 323, 266); // W --> D
+  // _________________________________________________________
+  // TOMTOM 2
   fill(204, 204, 204);
-  ellipse(595, 360, 130, 130);
+  ellipse(553, 237, 130, 130);
   fill(199, 178, 153);
-  ellipse(595, 360, 114, 114);
+  ellipse(553, 237, 114, 114);
   if(playTomTom2 == true) {
-    fill(226, 134, 145);
-    ellipse(595, 360, 114, 114);
+    fill(242, 51, 88);
+    ellipse(553, 237, 114, 114);
   }
-  fill(226, 208, 192);
-  textSize(60);
-  text("Ä", 571, 382);
+  fill(237, 221, 206);
+  textSize(110);
+  text("J", 533, 272); // Ä --> J
+  // _________________________________________________________
+  // RIDE
+  fill(226, 178, 59);
+  ellipse(650, 274, 135, 135);
+  fill(206, 162, 40);
+  ellipse(650, 274, 119, 119);
+  if(playRide == true) {
+    fill(242, 51, 88);
+    ellipse(650, 274, 119, 119);
+  }
+  fill(249, 204, 103);
+  textSize(110);
+  text("K", 620, 310); // P --> K
+  // _________________________________________________________
+  // SNARE
+  fill(204, 204, 204);
+  ellipse(317, 368, 140, 140);
+  fill(199, 178, 153);
+  ellipse(317, 368, 124, 124);
+  if(playSnare == true) {
+    fill(242, 51, 88);
+    ellipse(317, 368, 124, 124);
+  }
+  fill(237, 221, 206);
+  textSize(120);
+  text("S", 289, 407); // A --> S
+  // _________________________________________________________
   // HIHAT ------------------------------
   fill(226, 178, 59);
-  ellipse(375, 280, 135, 135);
+  ellipse(233, 300, 135, 135);
   fill(206, 162, 40);
-  ellipse(375, 280, 119, 119);
+  ellipse(233, 300, 119, 119);
   if(playHiHat == true) {
-    fill(226, 134, 145);
-    ellipse(375, 280, 119, 119);
+    fill(242, 51, 88);
+    ellipse(233, 300, 119, 119);
   }
   fill(249, 204, 103);
-  textSize(64);
-  text("D", 353, 305);
-  // RIDE ------------------------------
-  fill(226, 178, 59);
-  ellipse(520, 280, 135, 135);
-  fill(206, 162, 40);
-  ellipse(520, 280, 119, 119);
-  if(playRide == true) {
-    fill(226, 134, 145);
-    ellipse(520, 280, 119, 119);
-  }
-  fill(249, 204, 103);
-  textSize(64);
-  text("P", 501, 305);
+  textSize(110);
+  text("A", 200, 332); // D --> A
 }
