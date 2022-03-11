@@ -65,6 +65,32 @@ void setup() {
      .setColorForeground(#cea228)
      .setColorActive(#e2b23b);
      ;
+  /*
+  CP5.addButton("Start")
+     .setValue(1)
+     .setPosition(49,130)
+     .setSize(79,20)
+     .setColorBackground(#424242)
+     .setColorForeground(#5b5959)
+     .setColorActive(#cea228);
+     ;
+  CP5.addButton("Stop")
+     .setValue(0)
+     .setPosition(49,152)
+     .setSize(79,20)
+     .setColorBackground(#424242)
+     .setColorForeground(#5b5959)
+     .setColorActive(#cea228);
+     ;
+  CP5.addButton("Save")
+     .setValue(2)
+     .setPosition(49,174)
+     .setSize(79,20)
+     .setColorBackground(#424242)
+     .setColorForeground(#5b5959)
+     .setColorActive(#cea228);
+     ;
+  */
 }
 
 
