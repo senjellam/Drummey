@@ -19,6 +19,9 @@ boolean playHiHat = false;
 boolean playRide = false;
 
 float volume;
+int threshold;
+int attack;
+int release;
 
 void setup() {
   surface.setTitle("Drummey • " + "Version " + version);
@@ -63,7 +66,11 @@ void setup() {
      .setSize(50,50)
      .setColorBackground(#5b5959)
      .setColorForeground(#cea228)
-     .setColorActive(#e2b23b);
+     .setColorActive(#e2b23b)
+     .setNumberOfTickMarks(20)
+     .setTickMarkLength(5)
+     .snapToTickMarks(true)
+     .showTickMarks(false); 
      ;
   /*
   CP5.addButton("Start")
@@ -91,6 +98,50 @@ void setup() {
      .setColorActive(#cea228);
      ;
   */
+  CP5.addKnob("Threshold")
+     .setRange(0,30)
+     .setValue(0)
+     // .setPosition(327, 482)
+     .setPosition(360, 482)
+     .setSize(50,50)
+     .setColorBackground(#5b5959)
+     .setColorForeground(#cea228)
+     .setColorActive(#e2b23b);
+     ;
+  /*
+  CP5.addKnob("Ratio") // RANGE SETTINGS CHECKEN
+     .setRange(0,4)
+     .setValue(0)
+     .setPosition(392, 482)
+     .setSize(50,50)
+     .setColorBackground(#5b5959)
+     .setColorForeground(#cea228)
+     .setColorActive(#e2b23b)
+     .setNumberOfTickMarks(4)
+     .setTickMarkLength(1)
+     .snapToTickMarks(true)
+     ;
+  */
+  CP5.addKnob("Attack")
+     .setRange(0,100)
+     .setValue(0)
+     // .setPosition(457, 482)
+     .setPosition(425, 482)
+     .setSize(50,50)
+     .setColorBackground(#5b5959)
+     .setColorForeground(#cea228)
+     .setColorActive(#e2b23b);
+     ;
+  CP5.addKnob("Release")
+     .setRange(0,500)
+     .setValue(0)
+     // .setPosition(522, 482)
+     .setPosition(490, 482)
+     .setSize(50,50)
+     .setColorBackground(#5b5959)
+     .setColorForeground(#cea228)
+     .setColorActive(#e2b23b);
+     ;
 }
 
 
@@ -107,6 +158,10 @@ void draw() {
   if(switchMode == 0) drawFusion();
   if(switchMode == 1) drawRock();
   if(switchMode == 2) drawJazz();
+  
+  fill(66, 66, 66);
+  // rect((width/2)-130, 477, 260, 73, 10);
+  rect((width/2)-100, 477, 201, 73, 10);
   
   fill(66, 66, 66);
   rect(789, 477, 60, 73, 10);
@@ -142,11 +197,33 @@ public void Volume(float theValue) {
 }
 
 
+public void Threshold(int theValue) {
+  println("Threshold: " + theValue);
+  threshold = theValue;
+}
+
+
+public void Attack(int theValue) {
+  println("Attack: " + theValue);
+  attack = theValue/100;
+}
+
+
+public void Releae(int theValue) {
+  println("Release: " + theValue);
+  release = theValue;
+}
+
+
 void keyPressed() {
   OscMessage drum = new OscMessage("/jazzDrums");
+  OscMessage setT = new OscMessage("/setT");
+  OscMessage setA = new OscMessage("/setA");
   if (key == ' ') {
     playBass = true;
     drum.add(volume);
+    // setT.add(threshold);
+    // setA.add(attack);
   } else if(key != ' ') {
       drum.add(0);
     }
@@ -181,6 +258,8 @@ void keyPressed() {
       drum.add(0);
     }
   OP5.send(drum, netAdd);
+  // OP5.send(setT, netAdd);
+  // OP5.send(setA, netAdd);
 }
 
 
