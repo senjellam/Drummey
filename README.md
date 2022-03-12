@@ -10,6 +10,7 @@ Basic drum simulator with three different drum kits. To play simple press the ke
 - add reset button for sound settings
 - check values for threshold and release (attack works with 0.0 - 1.0)
 - (record/save function)
+
 Finished:
 - connect Sonic Pi 🗸
 - add volume knob 🗸 and more knobs to controll and indivisualize the sound xp 🗸
