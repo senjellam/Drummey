@@ -18,6 +18,7 @@ boolean playTomTom2 = false;
 boolean playTomTom3 = false;
 boolean playHiHat = false;
 boolean playRide = false;
+boolean playCrash = false;
 
 float volume;
 float threshold;
@@ -289,6 +290,59 @@ void keyPressed() {
       }
     OP5.send(drumsFusion, netAdd);
   }
+  // KEYBINDS FOR ROCK DRUMS
+  if(switchMode == 1) {
+    OscMessage drumsRock = new OscMessage("/drumsRock");
+    if (key == ' ') {
+      playBass = true;
+      drumsRock.add(volume);
+    } else if(key != ' ') {
+        drumsRock.add(0);
+      }
+    if (key == 's' || key == 'S') {
+      playSnare = true;
+      drumsRock.add(volume);
+    } else if(key != 's' || key != 'S') {
+        drumsRock.add(0);
+      }
+    if (key == 'd' || key == 'D') {
+      playTomTom1 = true;
+      drumsRock.add(volume);
+    } else if(key != 'd' || key != 'D') {
+        drumsRock.add(0);
+      }
+    if (key == 'j' || key == 'J') {
+      playTomTom2 = true;
+      drumsRock.add(volume);
+    } else if(key != 'j' || key != 'J') {
+        drumsRock.add(0);
+      }
+    if (key == 'k' || key == 'K') {
+      playRide = true;
+      drumsRock.add(volume);
+    } else if(key != 'k' || key != 'K') {
+        drumsRock.add(0);
+      }
+    if (key == 'a' || key == 'A') {
+      playHiHat = true;
+      drumsRock.add(volume);
+    } else if(key != 'a' || key != 'A') {
+        drumsRock.add(0);
+      }
+    if (key == 'l' || key == 'L') {
+      playTomTom3 = true;
+      drumsRock.add(volume);
+    } else if(key != 'l' || key != 'L') {
+        drumsRock.add(0);
+      }
+    if (key == 'w' || key == 'W') {
+      playCrash = true;
+      drumsRock.add(volume);
+    } else if(key != 'w' || key != 'W') {
+        drumsRock.add(0);
+      }
+    OP5.send(drumsRock, netAdd);
+  }
   // KEYBINDS FOR JAZZ DRUMS
   if(switchMode == 2) {
     OscMessage drumsJazz = new OscMessage("/drumsJazz");
@@ -343,6 +397,7 @@ void keyReleased() {
   if (key == 'k' || key == 'K') playRide = false;
   if (key == 'a' || key == 'A') playHiHat = false;
   if (key == 'l' || key == 'L') playTomTom3 = false;
+  if (key == 'w' || key == 'W') playCrash = false;
 }
 
 
@@ -465,6 +520,134 @@ void drawRock() {
   textSize(24);
   String activeDrums = "Rock Drums";
   text(activeDrums, (width/2-(textWidth(activeDrums)/2)), 55);
+  // _________________________________________________________
+  // BASS
+  fill(204, 204, 204);
+  rect((width/2)-150, 150, 300, 8, 30, 30, 0, 0);
+  fill(142, 32, 42);
+  rect((width/2)-150, 158, 300, 100);
+  fill(204, 204, 204);
+  rect((width/2)-150, 258, 300, 8, 0, 0, 30, 30);
+  fill(204, 204, 204);
+  ellipse((width/2)-1, 208, 26, 26);
+  //
+  pushMatrix();
+  translate((width/2)-1, 204);
+  rotate(radians(15));
+  fill(204, 204, 204);
+  rect(0, 0, 150, 8);
+  popMatrix();
+  //
+  pushMatrix();
+  translate((width/2)-1, 211);
+  rotate(radians(165));
+  fill(204, 204, 204);
+  rect(0, 0, 150, 8);
+  popMatrix();
+  //
+  fill(91, 91, 91);
+  rect((width/2)-25, 270, 50, 75, 7, 7, 0, 0);
+  fill(124, 124, 124);
+  rect((width/2)-25, 345, 50, 25, 0, 0, 7, 7);
+  if(playBass == true) {
+    fill(242, 51, 88);
+    rect((width/2)-25, 270, 50, 75, 7, 7, 0, 0);
+  }
+  fill(198, 198, 198);
+  textSize(15);
+  String keyBass = "SPACE";
+  text(keyBass, (width/2-(textWidth(keyBass)/2)), 315);
+  // _________________________________________________________
+  // TOMTOM 1
+  fill(204, 204, 204);
+  ellipse(350, 237, 120, 120);
+  fill(199, 178, 153);
+  ellipse(350, 237, 104, 104);
+  if(playTomTom1 == true) {
+    fill(242, 51, 88);
+    ellipse(350, 237, 104, 104);
+  }
+  fill(237, 221, 206);
+  textSize(90);
+  text("D", 323, 266); // W --> D
+  // _________________________________________________________
+  // TOMTOM 2
+  fill(204, 204, 204);
+  ellipse(553, 237, 130, 130);
+  fill(199, 178, 153);
+  ellipse(553, 237, 114, 114);
+  if(playTomTom2 == true) {
+    fill(242, 51, 88);
+    ellipse(553, 237, 114, 114);
+  }
+  fill(237, 221, 206);
+  textSize(110);
+  text("J", 533, 272); // Ä --> J
+  // _________________________________________________________
+  // TOMTOM 3
+  fill(204, 204, 204);
+  ellipse(555, 367, 122, 122);
+  fill(199, 178, 153);
+  ellipse(555, 367, 106, 106);
+  if(playTomTom3 == true) {
+    fill(242, 51, 88);
+    ellipse(555, 367, 106, 106);
+  }
+  fill(237, 221, 206);
+  textSize(100);
+  text("L", 534, 397);
+  // _________________________________________________________
+  // RIDE
+  fill(226, 178, 59);
+  ellipse(650, 274, 135, 135);
+  fill(206, 162, 40);
+  ellipse(650, 274, 119, 119);
+  if(playRide == true) {
+    fill(242, 51, 88);
+    ellipse(650, 274, 119, 119);
+  }
+  fill(249, 204, 103);
+  textSize(110);
+  text("K", 620, 310); // P --> K
+  // _________________________________________________________
+  // SNARE
+  fill(204, 204, 204);
+  ellipse(317, 368, 140, 140);
+  fill(199, 178, 153);
+  ellipse(317, 368, 124, 124);
+  if(playSnare == true) {
+    fill(242, 51, 88);
+    ellipse(317, 368, 124, 124);
+  }
+  fill(237, 221, 206);
+  textSize(120);
+  text("S", 289, 407); // A --> S
+  // _________________________________________________________
+  // HIHAT
+  fill(226, 178, 59);
+  ellipse(233, 300, 135, 135);
+  fill(206, 162, 40);
+  ellipse(233, 300, 119, 119);
+  if(playHiHat == true) {
+    fill(242, 51, 88);
+    ellipse(233, 300, 119, 119);
+  }
+  fill(249, 204, 103);
+  textSize(110);
+  text("A", 200, 332); // D --> A
+  // _________________________________________________________
+  // CRASH
+  fill(226, 178, 59);
+  ellipse(292, 185, 115, 115);
+  fill(206, 162, 40);
+  ellipse(292, 185, 99, 99);
+  if(playCrash == true) {
+    fill(242, 51, 88);
+    ellipse(292, 185, 99, 99);
+  }
+  fill(249, 204, 103);
+  textSize(80);
+  text("W", 255, 212); // D --> A
 }
 
 
