@@ -9,7 +9,8 @@ Basic drum simulator with three different drum kits. To play simple press the ke
 - connect Sonic Pi 🗸
 - create drum overlay (jazz 🗸, rock, fusion)
 - (record/save function)
-- add volume knob 🗸 and more knobs to controll and indivisualize the sound xp
+- add volume knob 🗸 and more knobs to controll and indivisualize the sound xp 🗸
+- check values for threshold and release (attack works with 0.0 - 1.0)
 - change color scheme 🗸
 - implement mode switch buttons 🗸
 
