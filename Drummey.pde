@@ -19,9 +19,11 @@ boolean playHiHat = false;
 boolean playRide = false;
 
 float volume;
-int threshold;
-int attack;
-int release;
+float threshold;
+float attack;
+float release;
+
+boolean startCode = false;
 
 void setup() {
   surface.setTitle("Drummey • " + "Version " + version);
@@ -101,47 +103,52 @@ void setup() {
   CP5.addKnob("Threshold")
      .setRange(0,30)
      .setValue(0)
-     // .setPosition(327, 482)
+     // .setPosition(327, 482) position for 4 buttons
      .setPosition(360, 482)
      .setSize(50,50)
      .setColorBackground(#5b5959)
      .setColorForeground(#cea228)
      .setColorActive(#e2b23b);
      ;
-  /*
-  CP5.addKnob("Ratio") // RANGE SETTINGS CHECKEN
-     .setRange(0,4)
-     .setValue(0)
-     .setPosition(392, 482)
-     .setSize(50,50)
-     .setColorBackground(#5b5959)
-     .setColorForeground(#cea228)
-     .setColorActive(#e2b23b)
-     .setNumberOfTickMarks(4)
-     .setTickMarkLength(1)
-     .snapToTickMarks(true)
-     ;
-  */
   CP5.addKnob("Attack")
-     .setRange(0,100)
+     .setRange(0,10)
      .setValue(0)
-     // .setPosition(457, 482)
+     // .setPosition(457, 482) position for 4 buttons
      .setPosition(425, 482)
      .setSize(50,50)
      .setColorBackground(#5b5959)
      .setColorForeground(#cea228)
-     .setColorActive(#e2b23b);
+     .setColorActive(#e2b23b)
+     .setNumberOfTickMarks(10)
+     .setTickMarkLength(1)
+     .snapToTickMarks(true)
+     .showTickMarks(false);
      ;
   CP5.addKnob("Release")
-     .setRange(0,500)
+     .setRange(0,100)
      .setValue(0)
-     // .setPosition(522, 482)
+     // .setPosition(522, 482) position for 4 buttons
      .setPosition(490, 482)
      .setSize(50,50)
      .setColorBackground(#5b5959)
      .setColorForeground(#cea228)
      .setColorActive(#e2b23b);
      ;
+     
+  // SETS KNOBS TO ZERO AT START
+  if(startCode == false) {
+    OscMessage setAttack = new OscMessage("/setAttack");
+    attack = 0;
+    setAttack.add(attack);
+    OP5.send(setAttack, netAdd);
+    
+    OscMessage setRelease = new OscMessage("/setRelease");
+    release = 0;
+    setRelease.add(release);
+    OP5.send(setRelease, netAdd);
+    
+    startCode = true;
+  }
 }
 
 
@@ -160,7 +167,7 @@ void draw() {
   if(switchMode == 2) drawJazz();
   
   fill(66, 66, 66);
-  // rect((width/2)-130, 477, 260, 73, 10);
+  // rect((width/2)-130, 477, 260, 73, 10); size for 4 buttons
   rect((width/2)-100, 477, 201, 73, 10);
   
   fill(66, 66, 66);
@@ -187,43 +194,46 @@ public void Fusion(int theValue) {
 
 public void Volume(float theValue) {
   println("Volume: " + theValue);
-  /*
-  OscMessage volume = new OscMessage("/volume");
-  volume.add(theValue);
-  OP5.send(volume, netAdd);
-  */
   volume = theValue/100;
   println("Volume: " + volume);
 }
 
 
-public void Threshold(int theValue) {
+public void Threshold(float theValue) {
+  OscMessage setThreshold = new OscMessage("/setThreshold");
   println("Threshold: " + theValue);
   threshold = theValue;
+  println(theValue);
+  setThreshold.add(threshold);
+  OP5.send(setThreshold, netAdd);
 }
 
 
-public void Attack(int theValue) {
+public void Attack(float theValue) {
+  OscMessage setAttack = new OscMessage("/setAttack");
   println("Attack: " + theValue);
   attack = theValue/100;
+  println(theValue);
+  setAttack.add(attack);
+  OP5.send(setAttack, netAdd);
 }
 
 
-public void Releae(int theValue) {
+public void Release(float theValue) {
+  OscMessage setRelease = new OscMessage("/setRelease");
   println("Release: " + theValue);
-  release = theValue;
+  release = theValue/100;
+  println(theValue);
+  setRelease.add(release);
+  OP5.send(setRelease, netAdd);
 }
 
 
 void keyPressed() {
   OscMessage drum = new OscMessage("/jazzDrums");
-  OscMessage setT = new OscMessage("/setT");
-  OscMessage setA = new OscMessage("/setA");
   if (key == ' ') {
     playBass = true;
     drum.add(volume);
-    // setT.add(threshold);
-    // setA.add(attack);
   } else if(key != ' ') {
       drum.add(0);
     }
@@ -258,8 +268,6 @@ void keyPressed() {
       drum.add(0);
     }
   OP5.send(drum, netAdd);
-  // OP5.send(setT, netAdd);
-  // OP5.send(setA, netAdd);
 }
 
 
