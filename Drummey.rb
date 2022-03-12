@@ -1,5 +1,8 @@
 use_osc "localhost", 4560
 
+
+/ GLOBAL VALUES /
+
 live_loop :getThreshold do
   use_real_time
   setThreshold = sync "/osc*/setThreshold"
@@ -18,44 +21,99 @@ live_loop :getRelease do
   set :gRelease, setRelease[0]
 end
 
+
+/ FUSION DRUMS /
+
+live_loop :fusionBass do
+  use_real_time
+  drumsFusion = sync "/osc*/drumsFusion"
+  set :amp, drumsFusion[0]
+  sample :drum_bass_hard, amp: get(:amp), threshold: get(:gThreshold), attack: get(:gAttack), release: get(:gRelease)
+end
+
+live_loop :fusionSnare do
+  use_real_time
+  drumsFusion = sync "/osc*/drumsFusion"
+  set :amp, drumsFusion[1]
+  sample :drum_snare_hard, amp: get(:amp), threshold: get(:gThreshold), attack: get(:gAttack), release: get(:gRelease)
+end
+
+live_loop :fusionTomTom1 do
+  use_real_time
+  drumsFusion = sync "/osc*/drumsFusion"
+  set :amp, drumsFusion[2]
+  sample :drum_tom_mid_hard, amp: get(:amp), threshold: get(:gThreshold), attack: get(:gAttack), release: get(:gRelease)
+end
+
+live_loop :fusionTomTom2 do
+  use_real_time
+  drumsFusion = sync "/osc*/drumsFusion"
+  set :amp, drumsFusion[3]
+  sample :drum_tom_hi_hard, amp: get(:amp), threshold: get(:gThreshold), attack: get(:gAttack), release: get(:gRelease)
+end
+
+live_loop :fusionRide do
+  use_real_time
+  drumsFusion = sync "/osc*/drumsFusion"
+  set :amp, drumsFusion[4]
+  sample :drum_cymbal_hard, amp: get(:amp), threshold: get(:gThreshold), attack: get(:gAttack), release: get(:gRelease)
+end
+
+live_loop :fusionHiHat do
+  use_real_time
+  drumsFusion = sync "/osc*/drumsFusion"
+  set :amp, drumsFusion[5]
+  sample :drum_cymbal_closed, amp: get(:amp), threshold: get(:gThreshold), attack: get(:gAttack), release: get(:gRelease)
+end
+
+live_loop :fusionTomTom3 do
+  use_real_time
+  drumsFusion = sync "/osc*/drumsFusion"
+  set :amp, drumsFusion[6]
+  sample :drum_tom_lo_hard, amp: get(:amp), threshold: get(:gThreshold), attack: get(:gAttack), release: get(:gRelease)
+end
+
+
+/ JAZZ DRUMS /
+
 live_loop :jazzBass do
   use_real_time
-  jazzDrums = sync "/osc*/jazzDrums"
-  set :amp, jazzDrums[0]
+  drumsJazz = sync "/osc*/drumsJazz"
+  set :amp, drumsJazz[0]
   sample :drum_bass_hard, amp: get(:amp), threshold: get(:gThreshold), attack: get(:gAttack), release: get(:gRelease)
 end
 
 live_loop :jazzSnare do
   use_real_time
-  jazzDrums = sync "/osc*/jazzDrums"
-  set :amp, jazzDrums[1]
+  drumsJazz = sync "/osc*/drumsJazz"
+  set :amp, drumsJazz[1]
   sample :drum_snare_hard, amp: get(:amp), threshold: get(:gThreshold), attack: get(:gAttack), release: get(:gRelease)
 end
 
 live_loop :jazzTomTom1 do
   use_real_time
-  jazzDrums = sync "/osc*/jazzDrums"
-  set :amp, jazzDrums[2]
+  drumsJazz = sync "/osc*/drumsJazz"
+  set :amp, drumsJazz[2]
   sample :drum_tom_mid_hard, amp: get(:amp), threshold: get(:gThreshold), attack: get(:gAttack), release: get(:gRelease)
 end
 
 live_loop :jazzTomTom2 do
   use_real_time
-  jazzDrums = sync "/osc*/jazzDrums"
-  set :amp, jazzDrums[3]
-  sample :drum_tom_mid_soft, amp: get(:amp), threshold: get(:gThreshold), attack: get(:gAttack), release: get(:gRelease)
+  drumsJazz = sync "/osc*/drumsJazz"
+  set :amp, drumsJazz[3]
+  sample :drum_tom_hi_hard, amp: get(:amp), threshold: get(:gThreshold), attack: get(:gAttack), release: get(:gRelease)
 end
 
 live_loop :jazzRide do
   use_real_time
-  jazzDrums = sync "/osc*/jazzDrums"
-  set :amp, jazzDrums[4]
+  drumsJazz = sync "/osc*/drumsJazz"
+  set :amp, drumsJazz[4]
   sample :drum_cymbal_hard, amp: get(:amp), threshold: get(:gThreshold), attack: get(:gAttack), release: get(:gRelease)
 end
 
 live_loop :jazzHiHat do
   use_real_time
-  jazzDrums = sync "/osc*/jazzDrums"
-  set :amp, jazzDrums[5]
+  drumsJazz = sync "/osc*/drumsJazz"
+  set :amp, drumsJazz[5]
   sample :drum_cymbal_closed, amp: get(:amp), threshold: get(:gThreshold), attack: get(:gAttack), release: get(:gRelease)
 end

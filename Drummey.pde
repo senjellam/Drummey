@@ -9,12 +9,13 @@ NetAddress netAdd;
 // VERSION NUMBER
 String version = "2022";
 // MODE SELECT
-int switchMode = 2; // 0=Fusion 1= Rock 2=Jazz
+int switchMode = 0; // 0=Fusion 1= Rock 2=Jazz
 // PLAY STATUS
 boolean playBass = false;
 boolean playSnare = false;
 boolean playTomTom1 = false;
 boolean playTomTom2 = false;
+boolean playTomTom3 = false;
 boolean playHiHat = false;
 boolean playRide = false;
 
@@ -25,6 +26,9 @@ float release;
 
 boolean startCode = false;
 
+
+// ====================================================================================
+// SETUP FUNCTION
 void setup() {
   surface.setTitle("Drummey • " + "Version " + version);
   size(900, 600);
@@ -152,6 +156,8 @@ void setup() {
 }
 
 
+// ====================================================================================
+// DRAW FUNCTION
 void draw() {
   background(43, 43, 43);
   PFont fontBold = loadFont("Calibri-Bold.vlw");
@@ -179,30 +185,32 @@ void draw() {
 }
 
 
+// ====================================================================================
+// JAZZ BUTTON FUNCTION
 public void Jazz(int theValue) {
   println("Mode: " + theValue + " (Jazz)");
   switchMode = theValue;
 }
-
-
+// ROCK BUTTON FUNCTION
 public void Rock(int theValue) {
   println("Mode: " + theValue + " (Rock)");
   switchMode = theValue;
 }
-
-
+// FUSION BUTTON FUNCTION
 public void Fusion(int theValue) {
   println("Mode: " + theValue + " (Fusion)");
   switchMode = theValue;
 }
 
+
+// ====================================================================================
+// VOLUME KNOB FUNCTION
 public void Volume(float theValue) {
   println("Volume: " + theValue);
   volume = theValue/100;
   println("Volume: " + volume);
 }
-
-
+// THRESHOLD KNOB FUNCTION
 public void Threshold(float theValue) {
   OscMessage setThreshold = new OscMessage("/setThreshold");
   println("Threshold: " + theValue);
@@ -211,8 +219,7 @@ public void Threshold(float theValue) {
   setThreshold.add(threshold);
   OP5.send(setThreshold, netAdd);
 }
-
-
+// ATTACK KNOB FUNCTION
 public void Attack(float theValue) {
   OscMessage setAttack = new OscMessage("/setAttack");
   println("Attack: " + theValue);
@@ -221,8 +228,7 @@ public void Attack(float theValue) {
   setAttack.add(attack);
   OP5.send(setAttack, netAdd);
 }
-
-
+// RELEASE KNOB FUNCTION
 public void Release(float theValue) {
   OscMessage setRelease = new OscMessage("/setRelease");
   println("Release: " + theValue);
@@ -233,48 +239,102 @@ public void Release(float theValue) {
 }
 
 
+// ====================================================================================
+// KEYBOARD INPUT FUNCTION
 void keyPressed() {
-  OscMessage drum = new OscMessage("/jazzDrums");
-  if (key == ' ') {
-    playBass = true;
-    drum.add(volume);
-  } else if(key != ' ') {
-      drum.add(0);
-    }
-  if (key == 's' || key == 'S') {
-    playSnare = true;
-    drum.add(volume);
-  } else if(key != 's' || key != 'S') {
-      drum.add(0);
-    }
-  if (key == 'd' || key == 'D') {
-    playTomTom1 = true;
-    drum.add(volume);
-  } else if(key != 'd' || key != 'D') {
-      drum.add(0);
-    }
-  if (key == 'j' || key == 'J') {
-    playTomTom2 = true;
-    drum.add(volume);
-  } else if(key != 'j' || key != 'J') {
-      drum.add(0);
-    }
-  if (key == 'k' || key == 'K') {
-    playRide = true;
-    drum.add(volume);
-  } else if(key != 'k' || key != 'K') {
-      drum.add(0);
-    }
-  if (key == 'a' || key == 'A') {
-    playHiHat = true;
-    drum.add(volume);
-  } else if(key != 'a' || key != 'A') {
-      drum.add(0);
-    }
-  OP5.send(drum, netAdd);
+  // KEYBINDS FOR FUSION DRUMS
+  if(switchMode == 0) {
+    OscMessage drumsFusion = new OscMessage("/drumsFusion");
+    if (key == ' ') {
+      playBass = true;
+      drumsFusion.add(volume);
+    } else if(key != ' ') {
+        drumsFusion.add(0);
+      }
+    if (key == 's' || key == 'S') {
+      playSnare = true;
+      drumsFusion.add(volume);
+    } else if(key != 's' || key != 'S') {
+        drumsFusion.add(0);
+      }
+    if (key == 'd' || key == 'D') {
+      playTomTom1 = true;
+      drumsFusion.add(volume);
+    } else if(key != 'd' || key != 'D') {
+        drumsFusion.add(0);
+      }
+    if (key == 'j' || key == 'J') {
+      playTomTom2 = true;
+      drumsFusion.add(volume);
+    } else if(key != 'j' || key != 'J') {
+        drumsFusion.add(0);
+      }
+    if (key == 'k' || key == 'K') {
+      playRide = true;
+      drumsFusion.add(volume);
+    } else if(key != 'k' || key != 'K') {
+        drumsFusion.add(0);
+      }
+    if (key == 'a' || key == 'A') {
+      playHiHat = true;
+      drumsFusion.add(volume);
+    } else if(key != 'a' || key != 'A') {
+        drumsFusion.add(0);
+      }
+    if (key == 'l' || key == 'L') {
+      playTomTom3 = true;
+      drumsFusion.add(volume);
+    } else if(key != 'l' || key != 'L') {
+        drumsFusion.add(0);
+      }
+    OP5.send(drumsFusion, netAdd);
+  }
+  // KEYBINDS FOR JAZZ DRUMS
+  if(switchMode == 2) {
+    OscMessage drumsJazz = new OscMessage("/drumsJazz");
+    if (key == ' ') {
+      playBass = true;
+      drumsJazz.add(volume);
+    } else if(key != ' ') {
+        drumsJazz.add(0);
+      }
+    if (key == 's' || key == 'S') {
+      playSnare = true;
+      drumsJazz.add(volume);
+    } else if(key != 's' || key != 'S') {
+        drumsJazz.add(0);
+      }
+    if (key == 'd' || key == 'D') {
+      playTomTom1 = true;
+      drumsJazz.add(volume);
+    } else if(key != 'd' || key != 'D') {
+        drumsJazz.add(0);
+      }
+    if (key == 'j' || key == 'J') {
+      playTomTom2 = true;
+      drumsJazz.add(volume);
+    } else if(key != 'j' || key != 'J') {
+        drumsJazz.add(0);
+      }
+    if (key == 'k' || key == 'K') {
+      playRide = true;
+      drumsJazz.add(volume);
+    } else if(key != 'k' || key != 'K') {
+        drumsJazz.add(0);
+      }
+    if (key == 'a' || key == 'A') {
+      playHiHat = true;
+      drumsJazz.add(volume);
+    } else if(key != 'a' || key != 'A') {
+        drumsJazz.add(0);
+      }
+    OP5.send(drumsJazz, netAdd);
+  }
 }
 
 
+// ====================================================================================
+// KEYBOARD INPUT FUNCTION
 void keyReleased() {
   if (key == ' ') playBass = false;
   if (key == 's' || key == 'S') playSnare = false;
@@ -282,9 +342,12 @@ void keyReleased() {
   if (key == 'j' || key == 'J') playTomTom2 = false;
   if (key == 'k' || key == 'K') playRide = false;
   if (key == 'a' || key == 'A') playHiHat = false;
+  if (key == 'l' || key == 'L') playTomTom3 = false;
 }
 
 
+// ====================================================================================
+// DISPLAY JAZZ DRUMS FUNCTION
 void drawJazz() {
   fill(224, 224, 224);
   textSize(24);
@@ -395,6 +458,8 @@ void drawJazz() {
 }
 
 
+// ====================================================================================
+// DISPLAY ROCK DRUMS FUNCTION
 void drawRock() {
   fill(224, 224, 224);
   textSize(24);
@@ -403,6 +468,8 @@ void drawRock() {
 }
 
 
+// ====================================================================================
+// DISPLAY FUSION DRUMS FUNCTION
 void drawFusion() {
   fill(224, 224, 224);
   textSize(24);
@@ -471,6 +538,19 @@ void drawFusion() {
   fill(237, 221, 206);
   textSize(110);
   text("J", 533, 272); // Ä --> J
+  // _________________________________________________________
+  // TOMTOM 3
+  fill(204, 204, 204);
+  ellipse(555, 367, 122, 122);
+  fill(199, 178, 153);
+  ellipse(555, 367, 106, 106);
+  if(playTomTom3 == true) {
+    fill(242, 51, 88);
+    ellipse(555, 367, 106, 106);
+  }
+  fill(237, 221, 206);
+  textSize(100);
+  text("L", 534, 397);
   // _________________________________________________________
   // RIDE
   fill(226, 178, 59);
