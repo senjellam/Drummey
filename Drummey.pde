@@ -6,10 +6,13 @@ OscP5 OP5;
 ControlP5 CP5;
 NetAddress netAdd;
 
+// ==========================================================
 // VERSION NUMBER
 String version = "2022";
+// ==========================================================
 // MODE SELECT
 int switchMode = 0; // 0=Fusion 1= Rock 2=Jazz
+// ==========================================================
 // PLAY STATUS
 boolean playBass = false;
 boolean playSnare = false;
@@ -19,30 +22,36 @@ boolean playTomTom3 = false;
 boolean playHiHat = false;
 boolean playRide = false;
 boolean playCrash = false;
-
+// ==========================================================
+// KNOB INPUTS
 float volume;
 float threshold;
 float attack;
 float release;
-
+// ==========================================================
+// PROGRAM STATUS
 boolean startCode = false;
+// ==========================================================
+// RECORDING STATUS
+boolean recStatus = false;
 
 
 // ====================================================================================
 // SETUP FUNCTION
 void setup() {
+  // ==========================================================
+  // SET PROGRAM PARAMETERS
   surface.setTitle("Drummey • " + "Version " + version);
   size(900, 600);
   frameRate(60);
   noStroke();
-  
+  // ==========================================================
   // INITIALIZE OSC, CONTROLS & NETWORK
   CP5 = new ControlP5(this);
   OP5 = new OscP5(this,4560);
   netAdd = new NetAddress("127.0.0.1",4560);
-  
+  // ==========================================================
   // SELECT MODE BUTTONS 
-  CP5 = new ControlP5(this);
   CP5.addButton("Jazz")
      .setValue(2)
      .setPosition(49,101)
@@ -67,6 +76,26 @@ void setup() {
      .setColorForeground(#5b5959)
      .setColorActive(#cea228);
      ;
+  // ==========================================================
+  // RECORDING BUTTONS
+  CP5.addButton("Start")
+     .setValue(1)
+     .setPosition(49,150)
+     .setSize(89,20)
+     .setColorBackground(#424242)
+     .setColorForeground(#5b5959)
+     .setColorActive(#cea228);
+     ;
+  CP5.addButton("Stop")
+     .setValue(1)
+     .setPosition(49,172)
+     .setSize(89,20)
+     .setColorBackground(#424242)
+     .setColorForeground(#5b5959)
+     .setColorActive(#cea228);
+     ;
+  // ==========================================================
+  // SETTINGS BUTTONS
   CP5.addKnob("Volume")
      .setValue(50)
      .setPosition(794, 482)
@@ -79,32 +108,6 @@ void setup() {
      .snapToTickMarks(true)
      .showTickMarks(false); 
      ;
-  
-  CP5.addButton("Start")
-     .setValue(1)
-     .setPosition(49,150)
-     .setSize(89,20)
-     .setColorBackground(#424242)
-     .setColorForeground(#5b5959)
-     .setColorActive(#cea228);
-     ;
-  CP5.addButton("Stop")
-     .setValue(0)
-     .setPosition(49,172)
-     .setSize(89,20)
-     .setColorBackground(#424242)
-     .setColorForeground(#5b5959)
-     .setColorActive(#cea228);
-     ;
-  CP5.addButton("Save")
-     .setValue(2)
-     .setPosition(49,194)
-     .setSize(89,20)
-     .setColorBackground(#424242)
-     .setColorForeground(#5b5959)
-     .setColorActive(#cea228);
-     ;
-  
   CP5.addKnob("Threshold")
      .setRange(0,30)
      .setValue(0)
@@ -137,11 +140,20 @@ void setup() {
      .setSize(50,50)
      .setColorBackground(#5b5959)
      .setColorForeground(#cea228)
-     .setColorActive(#e2b23b);
+     .setColorActive(#e2b23b)
+     .setNumberOfTickMarks(50)
+     .setTickMarkLength(2)
+     .snapToTickMarks(true)
+     .showTickMarks(false);
      ;
-     
+  // ==========================================================
   // SETS KNOBS TO ZERO AT START
   if(startCode == false) {
+    OscMessage setThreshold = new OscMessage("/setThreshold");
+    threshold = 0;
+    setThreshold.add(threshold);
+    OP5.send(setThreshold, netAdd);
+    
     OscMessage setAttack = new OscMessage("/setAttack");
     attack = 0;
     setAttack.add(attack);
@@ -160,29 +172,43 @@ void setup() {
 // ====================================================================================
 // DRAW FUNCTION
 void draw() {
+  // ==========================================================
+  // SET PROGRAM PARAMETERS
   background(43, 43, 43);
   PFont fontBold = loadFont("Calibri-Bold.vlw");
   textFont(fontBold);
-  
+  // ==========================================================
+  // BUTTON DESC
   fill(224, 224, 224);
   textSize(14);
   text("Select Drums", 50, 50);
-  
   fill(224, 224, 224);
   textSize(14);
   text("Record Session", 50, 143);
-  
+  // ==========================================================
   // CHECK MODE
   if(switchMode == 0) drawFusion();
   if(switchMode == 1) drawRock();
   if(switchMode == 2) drawJazz();
-  
+  // ==========================================================
+  // MENU FOR SETTINGS
   fill(66, 66, 66);
-  // rect((width/2)-130, 477, 260, 73, 10); size for 4 buttons
   rect((width/2)-100, 477, 201, 73, 10);
-  
+  // ==========================================================
+  // MENU FOR VOLUME
   fill(66, 66, 66);
   rect(789, 477, 60, 73, 10);
+  // ==========================================================
+  // RECORDING STATUS ICON
+  if(recStatus == true) {
+    fill(66, 66, 66);
+    rect(799, 36, 50, 23, 10);
+    fill(224, 224, 224);
+    textSize(14);
+    text("REC", 807, 52.5);
+    fill(255, 0, 0);
+    ellipse(837, 48, 10, 10);
+  }
 }
 
 
@@ -201,6 +227,30 @@ public void Rock(int theValue) {
 public void Fusion(int theValue) {
   println("Mode: " + theValue + " (Fusion)");
   switchMode = theValue;
+}
+// START BUTTON FUNCTION
+public void Start(int theValue) {
+  OscMessage setStart = new OscMessage("/setStart");
+  if(theValue == 1) {
+    setStart.add(theValue);
+    theValue = 0;
+    recStatus = true;
+  } else {
+      setStart.add(0);
+  }
+  OP5.send(setStart, netAdd);
+}
+// STOP BUTTON FUNCTION
+public void Stop(int theValue) {
+  OscMessage setStop = new OscMessage("/setStop");
+  if(theValue == 1) {
+    setStop.add(theValue);
+    theValue = 0;
+    recStatus = false;
+  } else {
+      setStop.add(0);
+  }
+  OP5.send(setStop, netAdd);
 }
 
 
@@ -233,7 +283,7 @@ public void Attack(float theValue) {
 public void Release(float theValue) {
   OscMessage setRelease = new OscMessage("/setRelease");
   println("Release: " + theValue);
-  release = theValue/100;
+  release = theValue/10;
   println(theValue);
   setRelease.add(release);
   OP5.send(setRelease, netAdd);
@@ -243,6 +293,7 @@ public void Release(float theValue) {
 // ====================================================================================
 // KEYBOARD INPUT FUNCTION
 void keyPressed() {
+  // ==========================================================
   // KEYBINDS FOR FUSION DRUMS
   if(switchMode == 0) {
     OscMessage drumsFusion = new OscMessage("/drumsFusion");
@@ -290,6 +341,7 @@ void keyPressed() {
       }
     OP5.send(drumsFusion, netAdd);
   }
+  // ==========================================================
   // KEYBINDS FOR ROCK DRUMS
   if(switchMode == 1) {
     OscMessage drumsRock = new OscMessage("/drumsRock");
@@ -343,6 +395,7 @@ void keyPressed() {
       }
     OP5.send(drumsRock, netAdd);
   }
+  // ==========================================================
   // KEYBINDS FOR JAZZ DRUMS
   if(switchMode == 2) {
     OscMessage drumsJazz = new OscMessage("/drumsJazz");
@@ -408,7 +461,7 @@ void drawJazz() {
   textSize(24);
   String activeDrums = "Jazz Drums";
   text(activeDrums, (width/2-(textWidth(activeDrums)/2)), 55);
-  // _________________________________________________________
+  // ==========================================================
   // BASS
   fill(204, 204, 204);
   rect((width/2)-127.5, 150, 255, 8, 30, 30, 0, 0);
@@ -445,7 +498,7 @@ void drawJazz() {
   textSize(15);
   String keyBass = "SPACE";
   text(keyBass, (width/2-(textWidth(keyBass)/2)), 315);
-  // _________________________________________________________
+  // ==========================================================
   // TOMTOM 1
   fill(204, 204, 204);
   ellipse(350, 237, 120, 120);
@@ -458,7 +511,7 @@ void drawJazz() {
   fill(237, 221, 206);
   textSize(90);
   text("D", 323, 266); // W --> D
-  // _________________________________________________________
+  // ==========================================================
   // TOMTOM 2
   fill(204, 204, 204);
   ellipse(553, 237, 130, 130);
@@ -471,7 +524,7 @@ void drawJazz() {
   fill(237, 221, 206);
   textSize(110);
   text("J", 533, 272); // Ä --> J
-  // _________________________________________________________
+  // ==========================================================
   // RIDE
   fill(226, 178, 59);
   ellipse(650, 274, 135, 135);
@@ -484,7 +537,7 @@ void drawJazz() {
   fill(249, 204, 103);
   textSize(110);
   text("K", 620, 310); // P --> K
-  // _________________________________________________________
+  // ==========================================================
   // SNARE
   fill(204, 204, 204);
   ellipse(317, 368, 140, 140);
@@ -497,7 +550,7 @@ void drawJazz() {
   fill(237, 221, 206);
   textSize(120);
   text("S", 289, 407); // A --> S
-  // _________________________________________________________
+  // ==========================================================
   // HIHAT
   fill(226, 178, 59);
   ellipse(233, 300, 135, 135);
@@ -520,7 +573,7 @@ void drawRock() {
   textSize(24);
   String activeDrums = "Rock Drums";
   text(activeDrums, (width/2-(textWidth(activeDrums)/2)), 55);
-  // _________________________________________________________
+  // ==========================================================
   // BASS
   fill(204, 204, 204);
   rect((width/2)-150, 150, 300, 8, 30, 30, 0, 0);
@@ -557,7 +610,7 @@ void drawRock() {
   textSize(15);
   String keyBass = "SPACE";
   text(keyBass, (width/2-(textWidth(keyBass)/2)), 315);
-  // _________________________________________________________
+  // ==========================================================
   // TOMTOM 1
   fill(204, 204, 204);
   ellipse(350, 237, 120, 120);
@@ -570,7 +623,7 @@ void drawRock() {
   fill(237, 221, 206);
   textSize(90);
   text("D", 323, 266); // W --> D
-  // _________________________________________________________
+  // ==========================================================
   // TOMTOM 2
   fill(204, 204, 204);
   ellipse(553, 237, 130, 130);
@@ -583,7 +636,7 @@ void drawRock() {
   fill(237, 221, 206);
   textSize(110);
   text("J", 533, 272); // Ä --> J
-  // _________________________________________________________
+  // ==========================================================
   // TOMTOM 3
   fill(204, 204, 204);
   ellipse(555, 367, 122, 122);
@@ -596,7 +649,7 @@ void drawRock() {
   fill(237, 221, 206);
   textSize(100);
   text("L", 534, 397);
-  // _________________________________________________________
+  // ==========================================================
   // RIDE
   fill(226, 178, 59);
   ellipse(650, 274, 135, 135);
@@ -609,7 +662,7 @@ void drawRock() {
   fill(249, 204, 103);
   textSize(110);
   text("K", 620, 310); // P --> K
-  // _________________________________________________________
+  // ==========================================================
   // SNARE
   fill(204, 204, 204);
   ellipse(317, 368, 140, 140);
@@ -622,7 +675,7 @@ void drawRock() {
   fill(237, 221, 206);
   textSize(120);
   text("S", 289, 407); // A --> S
-  // _________________________________________________________
+  // ==========================================================
   // HIHAT
   fill(226, 178, 59);
   ellipse(233, 300, 135, 135);
@@ -635,7 +688,7 @@ void drawRock() {
   fill(249, 204, 103);
   textSize(110);
   text("A", 200, 332); // D --> A
-  // _________________________________________________________
+  // ==========================================================
   // CRASH
   fill(226, 178, 59);
   ellipse(292, 185, 115, 115);
@@ -658,7 +711,7 @@ void drawFusion() {
   textSize(24);
   String activeDrums = "Fusion Drums";
   text(activeDrums, (width/2-(textWidth(activeDrums)/2)), 55);
-  // _________________________________________________________
+  // ==========================================================
   // BASS
   fill(204, 204, 204);
   rect((width/2)-140, 150, 280, 8, 30, 30, 0, 0);
@@ -695,7 +748,7 @@ void drawFusion() {
   textSize(15);
   String keyBass = "SPACE";
   text(keyBass, (width/2-(textWidth(keyBass)/2)), 315);
-  // _________________________________________________________
+  // ==========================================================
   // TOMTOM 1
   fill(204, 204, 204);
   ellipse(350, 237, 120, 120);
@@ -708,7 +761,7 @@ void drawFusion() {
   fill(237, 221, 206);
   textSize(90);
   text("D", 323, 266); // W --> D
-  // _________________________________________________________
+  // ==========================================================
   // TOMTOM 2
   fill(204, 204, 204);
   ellipse(553, 237, 130, 130);
@@ -721,7 +774,7 @@ void drawFusion() {
   fill(237, 221, 206);
   textSize(110);
   text("J", 533, 272); // Ä --> J
-  // _________________________________________________________
+  // ==========================================================
   // TOMTOM 3
   fill(204, 204, 204);
   ellipse(555, 367, 122, 122);
@@ -734,7 +787,7 @@ void drawFusion() {
   fill(237, 221, 206);
   textSize(100);
   text("L", 534, 397);
-  // _________________________________________________________
+  // ==========================================================
   // RIDE
   fill(226, 178, 59);
   ellipse(650, 274, 135, 135);
@@ -747,7 +800,7 @@ void drawFusion() {
   fill(249, 204, 103);
   textSize(110);
   text("K", 620, 310); // P --> K
-  // _________________________________________________________
+  // ==========================================================
   // SNARE
   fill(204, 204, 204);
   ellipse(317, 368, 140, 140);
@@ -760,7 +813,7 @@ void drawFusion() {
   fill(237, 221, 206);
   textSize(120);
   text("S", 289, 407); // A --> S
-  // _________________________________________________________
+  // ==========================================================
   // HIHAT
   fill(226, 178, 59);
   ellipse(233, 300, 135, 135);
