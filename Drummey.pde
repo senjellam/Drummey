@@ -1,6 +1,8 @@
 import oscP5.*;
 import netP5.*;
 import controlP5.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 OscP5 OP5;
 ControlP5 CP5;
@@ -25,15 +27,17 @@ boolean playCrash = false;
 // ==========================================================
 // KNOB INPUTS
 float volume;
-float threshold;
 float attack;
 float release;
+float sustain;
+float rate;
 // ==========================================================
 // PROGRAM STATUS
 boolean startCode = false;
 // ==========================================================
 // RECORDING STATUS
 boolean recStatus = false;
+boolean recCode = false;
 
 
 // ====================================================================================
@@ -108,21 +112,11 @@ void setup() {
      .snapToTickMarks(true)
      .showTickMarks(false); 
      ;
-  CP5.addKnob("Threshold")
-     .setRange(0,30)
-     .setValue(0)
-     // .setPosition(327, 482) position for 4 buttons
-     .setPosition(360, 482)
-     .setSize(50,50)
-     .setColorBackground(#5b5959)
-     .setColorForeground(#cea228)
-     .setColorActive(#e2b23b);
-     ;
   CP5.addKnob("Attack")
      .setRange(0,10)
      .setValue(0)
-     // .setPosition(457, 482) position for 4 buttons
-     .setPosition(425, 482)
+     .setPosition(327, 482) // position for 4 buttons
+     // .setPosition(360, 482)
      .setSize(50,50)
      .setColorBackground(#5b5959)
      .setColorForeground(#cea228)
@@ -133,27 +127,53 @@ void setup() {
      .showTickMarks(false);
      ;
   CP5.addKnob("Release")
-     .setRange(0,100)
+     .setRange(0,10)
      .setValue(0)
-     // .setPosition(522, 482) position for 4 buttons
-     .setPosition(490, 482)
+     .setPosition(392, 482)
      .setSize(50,50)
      .setColorBackground(#5b5959)
      .setColorForeground(#cea228)
      .setColorActive(#e2b23b)
-     .setNumberOfTickMarks(50)
-     .setTickMarkLength(2)
+     .setNumberOfTickMarks(10)
+     .setTickMarkLength(1)
      .snapToTickMarks(true)
      .showTickMarks(false);
+     ;
+  CP5.addKnob("Sustain")
+     .setRange(0,10)
+     .setValue(0)
+     .setPosition(457, 482) //  position for 4 buttons
+     // .setPosition(425, 482)
+     .setSize(50,50)
+     .setColorBackground(#5b5959)
+     .setColorForeground(#cea228)
+     .setColorActive(#e2b23b)
+     .setNumberOfTickMarks(10)
+     .setTickMarkLength(1)
+     .snapToTickMarks(true)
+     .showTickMarks(false);
+     ;
+  CP5.addKnob("Rate")
+     .setRange(0.6,1.4)
+     .setValue(1)
+     .setPosition(522, 482) // position for 4 buttons
+     // .setPosition(490, 482)
+     .setSize(50,50)
+     .setColorBackground(#5b5959)
+     .setColorForeground(#cea228)
+     .setColorActive(#e2b23b)
+     .setNumberOfTickMarks(4)
+     .setTickMarkLength(2)
+     .snapToTickMarks(true)
+     .showTickMarks(false)
+     .setViewStyle(Knob.ELLIPSE);
      ;
   // ==========================================================
   // SETS KNOBS TO ZERO AT START
   if(startCode == false) {
-    OscMessage setThreshold = new OscMessage("/setThreshold");
-    threshold = 0;
-    setThreshold.add(threshold);
-    OP5.send(setThreshold, netAdd);
-    
+    // ------------------------------
+    // Substain und Rate einfügen
+    // ------------------------------
     OscMessage setAttack = new OscMessage("/setAttack");
     attack = 0;
     setAttack.add(attack);
@@ -193,7 +213,8 @@ void draw() {
   // ==========================================================
   // MENU FOR SETTINGS
   fill(66, 66, 66);
-  rect((width/2)-100, 477, 201, 73, 10);
+  rect((width/2)-130, 477, 260, 73, 10);
+  //rect((width/2)-100, 477, 201, 73, 10);
   // ==========================================================
   // MENU FOR VOLUME
   fill(66, 66, 66);
@@ -230,63 +251,92 @@ public void Fusion(int theValue) {
 }
 // START BUTTON FUNCTION
 public void Start(int theValue) {
-  OscMessage setStart = new OscMessage("/setStart");
-  if(theValue == 1) {
-    setStart.add(theValue);
-    theValue = 0;
-    recStatus = true;
+  if(recCode == true) {
+    OscMessage setStart = new OscMessage("/setStart");
+    if(theValue == 1) {
+      setStart.add(theValue);
+      theValue = 0;
+      recStatus = true;
+    } else {
+        setStart.add(0);
+    }
+    OP5.send(setStart, netAdd);
   } else {
-      setStart.add(0);
+       recCode = true;
   }
-  OP5.send(setStart, netAdd);
 }
 // STOP BUTTON FUNCTION
 public void Stop(int theValue) {
-  OscMessage setStop = new OscMessage("/setStop");
-  if(theValue == 1) {
-    setStop.add(theValue);
-    theValue = 0;
-    recStatus = false;
+  if(recCode == true) {
+    OscMessage setStop = new OscMessage("/setStop");
+    if(theValue == 1) {
+      setStop.add(theValue);
+      theValue = 0;
+      recStatus = false;
+      // SETS RECORDING PATH
+      OscMessage setPath = new OscMessage("/setPath");
+      SimpleDateFormat formatter = new SimpleDateFormat(
+              "dd-MM-yyyy_HH-mm-ss");
+      Date currentTime = new Date();
+      System.out.println(formatter.format(currentTime));
+      String recPath = "D:/Hochschule/05_Wintersemester_2021-2022/Abschlussprojekte/Drummey/Drummey/Drummey_Recording_"+ formatter.format(currentTime) +".wav";
+      setPath.add(recPath);
+      OP5.send(setPath, netAdd);
+    } else {
+        setStop.add(0);
+    }
+    OP5.send(setStop, netAdd);
   } else {
-      setStop.add(0);
+       recCode = true;
   }
-  OP5.send(setStop, netAdd);
 }
 
 
 // ====================================================================================
 // VOLUME KNOB FUNCTION
 public void Volume(float theValue) {
-  println("Volume: " + theValue);
+  println("Processing Volume: " + theValue);
   volume = theValue/100;
-  println("Volume: " + volume);
-}
-// THRESHOLD KNOB FUNCTION
-public void Threshold(float theValue) {
-  OscMessage setThreshold = new OscMessage("/setThreshold");
-  println("Threshold: " + theValue);
-  threshold = theValue;
-  println(theValue);
-  setThreshold.add(threshold);
-  OP5.send(setThreshold, netAdd);
+  println("Sonic Pi Volume: " + volume);
 }
 // ATTACK KNOB FUNCTION
 public void Attack(float theValue) {
   OscMessage setAttack = new OscMessage("/setAttack");
-  println("Attack: " + theValue);
-  attack = theValue/100;
-  println(theValue);
+  println("Processing Attack: " + theValue);
+  attack = theValue/50;
+  attack = Math.round(attack * 100) / 100.0;
+  println("Sonic Pi Attack: " + attack);
   setAttack.add(attack);
   OP5.send(setAttack, netAdd);
 }
 // RELEASE KNOB FUNCTION
 public void Release(float theValue) {
   OscMessage setRelease = new OscMessage("/setRelease");
-  println("Release: " + theValue);
-  release = theValue/10;
-  println(theValue);
+  println("Processing Release: " + theValue);
+  release = 1 - theValue/10;
+  release = Math.round(release * 100) / 100.0;
+  println("Sonic Pi Release: " + release);
   setRelease.add(release);
   OP5.send(setRelease, netAdd);
+}
+// SUBSTAIN KNOB FUNCTION
+public void Sustain(float theValue) {
+  OscMessage setSustain = new OscMessage("/setSustain");
+  println("Processing Sustain: " + theValue);
+  sustain = 1 - theValue/10;
+  sustain = Math.round(sustain * 100) / 100.0;
+  println("Sonic Pi Sustain: " + sustain);
+  setSustain.add(sustain);
+  OP5.send(setSustain, netAdd);
+}
+// RATE KNOB FUNCTION
+public void Rate(float theValue) {
+  OscMessage setRate = new OscMessage("/setRate");
+  println("Processing Rate: " + theValue);
+  rate = theValue;
+  println("Sonic Pi Rate: " + rate);
+  setRate.add(rate);
+  OP5.send(setRate, netAdd);
 }
 
 
