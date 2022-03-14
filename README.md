@@ -6,9 +6,8 @@ Basic drum simulator with three different drum kits. To play simple press the ke
 ## To Do's
 - check whats the sound difference between j/r/f and make every drums unique
 - add reset button for sound settings
-- check values for threshold and release (attack works with 0.0 - 1.0)
-- check why attack does not work on crash rock
 - add fx like reverb, distortion or compressor
+- add welcome and saving message
 
 Finished:
 - connect Sonic Pi 🗸
@@ -19,6 +18,8 @@ Finished:
 - implement different drum kits (jazz 🗸, rock 🗸, fusion 🗸)
 - clean code in functions 🗸
 - record/save function 🗸
+- check why attack does not work on crash rock 🗸
+- check values for threshold and release (attack works with 0.0 - 1.0) 🗸
 
 ## Dependencies
 - controlP5 https://sojamo.de/libraries/controlP5/
