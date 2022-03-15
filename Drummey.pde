@@ -12,6 +12,10 @@ NetAddress netAdd;
 // VERSION NUMBER
 String version = "2022";
 // ==========================================================
+//CONFIG define path to save recording
+String savePath = "C:/example/path";
+String fileName = "Drummey_Recording_";
+// ==========================================================
 // MODE SELECT
 int switchMode = 0; // 0=Fusion 1= Rock 2=Jazz
 // ==========================================================
@@ -52,7 +56,7 @@ void setup() {
   size(900, 600);
   frameRate(60);
   noStroke();
-  time = millis();
+  float time = millis();
   // ==========================================================
   // INITIALIZE OSC, CONTROLS & NETWORK
   CP5 = new ControlP5(this);
@@ -294,7 +298,8 @@ public void Stop(int theValue) {
       SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss");
       Date currentTime = new Date();
       System.out.println(formatter.format(currentTime));
-      recPath = "D:/Hochschule/05_Wintersemester_2021-2022/Abschlussprojekte/Drummey/Drummey/Drummey_Recording_"+ formatter.format(currentTime) +".wav";
+      String recName = fileName + formatter.format(currentTime) +".wav";
+      recPath = savePath + recName;
       setPath.add(recPath);
       OP5.send(setPath, netAdd);
       // DRAW SAVE PATH
