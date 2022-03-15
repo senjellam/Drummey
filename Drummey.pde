@@ -36,8 +36,11 @@ float rate;
 boolean startCode = false;
 // ==========================================================
 // RECORDING STATUS
+String recPath = "";
 boolean recStatus = false;
 boolean recCode = false;
+boolean showSave = false;
+int saveCode = 0;
 
 
 // ====================================================================================
@@ -49,6 +52,7 @@ void setup() {
   size(900, 600);
   frameRate(60);
   noStroke();
+  time = millis();
   // ==========================================================
   // INITIALIZE OSC, CONTROLS & NETWORK
   CP5 = new ControlP5(this);
@@ -99,7 +103,7 @@ void setup() {
      .setColorActive(#cea228);
      ;
   // ==========================================================
-  // SETTINGS BUTTONS
+  // SETTINGS KNOBS
   CP5.addKnob("Volume")
      .setValue(50)
      .setPosition(794, 482)
@@ -171,9 +175,6 @@ void setup() {
   // ==========================================================
   // SETS KNOBS TO ZERO AT START
   if(startCode == false) {
-    // ------------------------------
-    // Substain und Rate einfügen
-    // ------------------------------
     OscMessage setAttack = new OscMessage("/setAttack");
     attack = 0;
     setAttack.add(attack);
@@ -183,6 +184,16 @@ void setup() {
     release = 0;
     setRelease.add(release);
     OP5.send(setRelease, netAdd);
+    
+    OscMessage setSustain = new OscMessage("/setSustain");
+    sustain = 0;
+    setSustain.add(sustain);
+    OP5.send(setSustain, netAdd);
+    
+    OscMessage setRate = new OscMessage("/setRate");
+    rate = 1;
+    setRate.add(rate);
+    OP5.send(setRate, netAdd);
     
     startCode = true;
   }
@@ -230,6 +241,10 @@ void draw() {
     fill(255, 0, 0);
     ellipse(837, 48, 10, 10);
   }
+  // DRAW SAVE PATH
+  if(showSave == true) {
+    drawSave(recPath);
+  }
 }
 
 
@@ -257,6 +272,7 @@ public void Start(int theValue) {
       setStart.add(theValue);
       theValue = 0;
       recStatus = true;
+      saveCode = 1;
     } else {
         setStart.add(0);
     }
@@ -275,13 +291,14 @@ public void Stop(int theValue) {
       recStatus = false;
       // SETS RECORDING PATH
       OscMessage setPath = new OscMessage("/setPath");
-      SimpleDateFormat formatter = new SimpleDateFormat(
-              "dd-MM-yyyy_HH-mm-ss");
+      SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss");
       Date currentTime = new Date();
       System.out.println(formatter.format(currentTime));
-      String recPath = "D:/Hochschule/05_Wintersemester_2021-2022/Abschlussprojekte/Drummey/Drummey/Drummey_Recording_"+ formatter.format(currentTime) +".wav";
+      recPath = "D:/Hochschule/05_Wintersemester_2021-2022/Abschlussprojekte/Drummey/Drummey/Drummey_Recording_"+ formatter.format(currentTime) +".wav";
       setPath.add(recPath);
       OP5.send(setPath, netAdd);
+      // DRAW SAVE PATH
+      if(saveCode == 1) showSave = true;
     } else {
         setStop.add(0);
     }
@@ -501,6 +518,22 @@ void keyReleased() {
   if (key == 'a' || key == 'A') playHiHat = false;
   if (key == 'l' || key == 'L') playTomTom3 = false;
   if (key == 'w' || key == 'W') playCrash = false;
+}
+
+
+// ====================================================================================
+// DISPLAY SAVE SUCCESS
+void drawSave(String path) {
+  fill(66, 66, 66);
+  rect(50, 565, 800, 20, 5);
+  fill(224, 224, 224);
+  textSize(12);
+  text(path, 146, 579);
+  
+  fill(102,205,0);
+  textSize(12);
+  String sessionSaved = "Session Saved In:";
+  text(sessionSaved, 56, 579);
 }
 
 
