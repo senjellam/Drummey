@@ -43,6 +43,11 @@ boolean recStatus = false;
 boolean recCode = false;
 boolean showSave = false;
 int saveCode = 0;
+// ==========================================================
+// FX VISIBILITY
+boolean distortionVisibilty = false;
+boolean reverbVisibilty = false;
+boolean wobbleVisibilty = false;
 
 
 // ====================================================================================
@@ -176,18 +181,18 @@ void setup() {
   // ==========================================================
   // FX TOGGLES  
   CP5.addToggle("Distortion")
-     .setPosition(59,444)
+     .setPosition(59,479)
      .setSize(42,15)
-     .setValue(0)
+     .setValue(1)
      .setMode(ControlP5.SWITCH)
      .setColorBackground(#5b5959)
      .setColorForeground(#cea228)
      .setColorActive(#cea228)
      ;
   CP5.addToggle("Reverb")
-     .setPosition(59,479)
+     .setPosition(59,444)
      .setSize(42,15)
-     .setValue(0)
+     .setValue(1)
      .setMode(ControlP5.SWITCH)
      .setColorBackground(#5b5959)
      .setColorForeground(#cea228)
@@ -196,7 +201,7 @@ void setup() {
   CP5.addToggle("Wobble")
      .setPosition(59,514)
      .setSize(42,15)
-     .setValue(0)
+     .setValue(1)
      .setMode(ControlP5.SWITCH)
      .setColorBackground(#5b5959)
      .setColorForeground(#cea228)
