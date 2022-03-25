@@ -115,92 +115,66 @@ end
 
 live_loop :fusionBass do
   with_fx :distortion, mix: get(:gDistortion) do
-    with_fx :reverb, mix: get(:gReverb) do
-      with_fx :wobble, mix: get(:gWobble) do
-        use_real_time
-        drumsFusion = sync "/osc*/drumsFusion"
-        set :amp, drumsFusion[0]
-        sample :drum_bass_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-      end
-    end
+    use_real_time
+    drumsFusion = sync "/osc*/drumsFusion"
+    set :amp, drumsFusion[0]
+    sample :drum_bass_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
   end
 end
 
 live_loop :fusionSnare do
   with_fx :distortion, mix: get(:gDistortion) do
-    with_fx :reverb, mix: get(:gReverb) do
-      with_fx :wobble, mix: get(:gWobble) do
-        use_real_time
-        drumsFusion = sync "/osc*/drumsFusion"
-        set :amp, drumsFusion[1]
-        sample :drum_snare_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-      end
-    end
+    use_real_time
+    drumsFusion = sync "/osc*/drumsFusion"
+    set :amp, drumsFusion[1]
+    sample :drum_snare_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
   end
 end
 
 live_loop :fusionTomTom1 do
   with_fx :distortion, mix: get(:gDistortion) do
-    with_fx :reverb, mix: get(:gReverb) do
-      with_fx :wobble, mix: get(:gWobble) do
-        use_real_time
-        drumsFusion = sync "/osc*/drumsFusion"
-        set :amp, drumsFusion[2]
-        sample :drum_tom_mid_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-      end
-    end
+    use_real_time
+    drumsFusion = sync "/osc*/drumsFusion"
+    set :amp, drumsFusion[2]
+    sample :drum_tom_mid_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
+    
   end
 end
 
 live_loop :fusionTomTom2 do
   with_fx :distortion, mix: get(:gDistortion) do
-    with_fx :reverb, mix: get(:gReverb) do
-      with_fx :wobble, mix: get(:gWobble) do
-        use_real_time
-        drumsFusion = sync "/osc*/drumsFusion"
-        set :amp, drumsFusion[3]
-        sample :drum_tom_hi_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-      end
-    end
+    use_real_time
+    drumsFusion = sync "/osc*/drumsFusion"
+    set :amp, drumsFusion[3]
+    sample :drum_tom_hi_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
   end
 end
 
+
 live_loop :fusionRide do
   with_fx :distortion, mix: get(:gDistortion) do
-    with_fx :reverb, mix: get(:gReverb) do
-      with_fx :wobble, mix: get(:gWobble) do
-        use_real_time
-        drumsFusion = sync "/osc*/drumsFusion"
-        set :amp, drumsFusion[4]
-        sample :drum_cymbal_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-      end
-    end
+    use_real_time
+    drumsFusion = sync "/osc*/drumsFusion"
+    set :amp, drumsFusion[4]
+    sample :drum_cymbal_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
   end
 end
 
 live_loop :fusionHiHat do
   with_fx :distortion, mix: get(:gDistortion) do
-    with_fx :reverb, mix: get(:gReverb) do
-      with_fx :wobble, mix: get(:gWobble) do
-        use_real_time
-        drumsFusion = sync "/osc*/drumsFusion"
-        set :amp, drumsFusion[5]
-        sample :drum_cymbal_closed, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-      end
-    end
+    use_real_time
+    drumsFusion = sync "/osc*/drumsFusion"
+    set :amp, drumsFusion[5]
+    sample :drum_cymbal_closed, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
   end
 end
 
 live_loop :fusionTomTom3 do
   with_fx :distortion, mix: get(:gDistortion) do
-    with_fx :reverb, mix: get(:gReverb) do
-      with_fx :wobble, mix: get(:gWobble) do
-        use_real_time
-        drumsFusion = sync "/osc*/drumsFusion"
-        set :amp, drumsFusion[6]
-        sample :drum_tom_lo_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-      end
-    end
+    use_real_time
+    drumsFusion = sync "/osc*/drumsFusion"
+    set :amp, drumsFusion[6]
+    sample :drum_tom_lo_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
   end
 end
 
