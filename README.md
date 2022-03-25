@@ -8,6 +8,7 @@ Basic drum simulator with three different drum kits. To play simple press the ke
 - add reset button for sound settings
 - add fx like reverb, distortion or compressor
 - add welcome and saving message
+- only one fx to each kit
 
 Finished:
 - connect Sonic Pi 🗸
