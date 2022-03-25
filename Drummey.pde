@@ -395,6 +395,39 @@ public void Rate(float theValue) {
 
 
 // ====================================================================================
+// DISTORTION TOGGLE FUNCTION
+public void Distortion(int theValue) {
+  OscMessage setDistortion = new OscMessage("/setDistortion");
+  if(theValue == 0) {
+    setDistortion.add(0);
+  } else {
+    setDistortion.add(0.5);
+  }
+  OP5.send(setDistortion, netAdd);
+}
+// REVERB TOGGLE FUNCTION
+public void Reverb(int theValue) {
+  OscMessage setReverb = new OscMessage("/setReverb");
+  if(theValue == 0) {
+    setReverb.add(0);
+  } else {
+    setReverb.add(0.5);
+  }
+  OP5.send(setReverb, netAdd);
+}
+// WOBBLE TOGGLE FUNCTION
+public void Wobble(int theValue) {
+  OscMessage setWobble = new OscMessage("/setWobble");
+  if(theValue == 0) {
+    setWobble.add(0);
+  } else {
+    setWobble.add(0.5);
+  }
+  OP5.send(setWobble, netAdd);
+}
+
+
+// ====================================================================================
 // KEYBOARD INPUT FUNCTION
 void keyPressed() {
   // ==========================================================
