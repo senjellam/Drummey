@@ -174,6 +174,35 @@ void setup() {
      .setViewStyle(Knob.ELLIPSE);
      ;
   // ==========================================================
+  // FX TOGGLES  
+  CP5.addToggle("Distortion")
+     .setPosition(59,444)
+     .setSize(42,15)
+     .setValue(0)
+     .setMode(ControlP5.SWITCH)
+     .setColorBackground(#5b5959)
+     .setColorForeground(#cea228)
+     .setColorActive(#cea228)
+     ;
+  CP5.addToggle("Reverb")
+     .setPosition(59,479)
+     .setSize(42,15)
+     .setValue(0)
+     .setMode(ControlP5.SWITCH)
+     .setColorBackground(#5b5959)
+     .setColorForeground(#cea228)
+     .setColorActive(#cea228)
+     ;
+  CP5.addToggle("Wobble")
+     .setPosition(59,514)
+     .setSize(42,15)
+     .setValue(0)
+     .setMode(ControlP5.SWITCH)
+     .setColorBackground(#5b5959)
+     .setColorForeground(#cea228)
+     .setColorActive(#cea228)
+     ;
+  // ==========================================================
   // SETS KNOBS TO ZERO AT START
   if(startCode == false) {
     /*
@@ -233,6 +262,10 @@ void draw() {
   // MENU FOR VOLUME
   fill(66, 66, 66);
   rect(789, 477, 60, 73, 10);
+  // ==========================================================
+  // MENU FOR FX
+  fill(66, 66, 66);
+  rect(50, 434, 60, 116, 10);
   // ==========================================================
   // RECORDING STATUS ICON
   if(recStatus == true) {
