@@ -37,6 +37,8 @@ boolean startCode = false;
 // ==========================================================
 // RECORDING STATUS
 String recPath = "";
+String savePath = "D:/Hochschule/05_Wintersemester_2021-2022/Abschlussprojekte/Drummey/Drummey/";
+String fileName = "Drummey_Recording_";
 boolean recStatus = false;
 boolean recCode = false;
 boolean showSave = false;
@@ -52,7 +54,6 @@ void setup() {
   size(900, 600);
   frameRate(60);
   noStroke();
-  time = millis();
   // ==========================================================
   // INITIALIZE OSC, CONTROLS & NETWORK
   CP5 = new ControlP5(this);
@@ -175,6 +176,7 @@ void setup() {
   // ==========================================================
   // SETS KNOBS TO ZERO AT START
   if(startCode == false) {
+    /*
     OscMessage setAttack = new OscMessage("/setAttack");
     attack = 0;
     setAttack.add(attack);
@@ -189,6 +191,7 @@ void setup() {
     sustain = 0;
     setSustain.add(sustain);
     OP5.send(setSustain, netAdd);
+    */
     
     OscMessage setRate = new OscMessage("/setRate");
     rate = 1;
@@ -243,7 +246,7 @@ void draw() {
   }
   // DRAW SAVE PATH
   if(showSave == true) {
-    drawSave(recPath);
+    // drawSave(recPath);
   }
 }
 
@@ -294,7 +297,8 @@ public void Stop(int theValue) {
       SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss");
       Date currentTime = new Date();
       System.out.println(formatter.format(currentTime));
-      recPath = "D:/Hochschule/05_Wintersemester_2021-2022/Abschlussprojekte/Drummey/Drummey/Drummey_Recording_"+ formatter.format(currentTime) +".wav";
+      // recPath = "D:/Hochschule/05_Wintersemester_2021-2022/Abschlussprojekte/Drummey/Drummey/Drummey_Recording_"+ formatter.format(currentTime) +".wav";
+      recPath = savePath + fileName + formatter.format(currentTime) + ".wav";
       setPath.add(recPath);
       OP5.send(setPath, netAdd);
       // DRAW SAVE PATH
