@@ -36,4 +36,4 @@ Finished:
 - record/save solution https://in-thread.sonic-pi.net/t/recording-is-not-happening-with-osc-commands/4710
 
 ## Thanks
-@Brian-Farmer for the initial idea
+@Brian-Farmer for useful input and advices
