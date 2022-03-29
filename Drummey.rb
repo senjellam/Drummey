@@ -2,55 +2,6 @@ use_osc "localhost", 4560
 
 
 # ===================================================================
-# RECORDING (code by robin.newman)
-
-define :pvalue do #get current listen port for Sonic Pi from log file
-  value= 4557 #pre new logfile format port was always 4557
-  File.open(ENV['HOME']+'/.sonic-pi/log/server-output.log','r') do |f1|
-    while l = f1.gets
-      if l.include?"Listen port:"
-        value = l.split(" ").last.to_i
-        break
-      end
-    end
-    f1.close
-  end
-  return value
-end
-
-puts "Server Listen port is: #{pvalue}"
-set :pvalue,pvalue
-
-#three functions with will start recording, stop recording and save recorded audio file
-define :recordStart do #this command is equivalent to pushing the start recording button
-  use_real_time
-  pvalue=get(:pvalue)
-  osc_send "localhost",pvalue, "/start-recording","guid-rbn"
-  sleep 1# make sure recording running before creating any audio to save
-  puts "recording started"
-end
-
-define :recordStop do #this command stops a currently recording process
-  use_real_time
-  pvalue=get(:pvalue)
-  osc_send "localhost",pvalue, "/stop-recording","guid-rbn"
-end
-
-define :saveAudio do |file|  #this command saves the recorded audio file
-  pvalue=get(:pvalue)
-  osc_send "localhost",pvalue, "/save-recording","guid-rbn",file
-  puts "recording stopped"
-end
-
-#combine stop and save functions
-define :stopAndSaveRecording do |file|
-  recordStop
-  saveAudio(file)
-  puts "Recording saved to #{file}"
-end
-
-
-# ===================================================================
 # GLOBAL VALUES
 
 live_loop :getAttack do
@@ -97,6 +48,53 @@ end
 
 
 # ===================================================================
+# RECORDING
+
+define :pvalue do #get current listen port for Sonic Pi from log file
+  value= 4557 #pre new logfile format port was always 4557
+  File.open(ENV['HOME']+'/.sonic-pi/log/server-output.log','r') do |f1|
+    while l = f1.gets
+      if l.include?"Listen port:"
+        value = l.split(" ").last.to_i
+        break
+      end
+    end
+    f1.close
+  end
+  return value
+end
+
+puts "Server Listen port is: #{pvalue}"
+set :pvalue,pvalue
+
+define :recordStart do #this command is equivalent to pushing the start recording button
+  use_real_time
+  pvalue=get(:pvalue)
+  osc_send "localhost",pvalue, "/start-recording","guid-rbn"
+  sleep 1# make sure recording running before creating any audio to save
+  puts "recording started"
+end
+
+define :recordStop do #this command stops a currently recording process
+  use_real_time
+  pvalue=get(:pvalue)
+  osc_send "localhost",pvalue, "/stop-recording","guid-rbn"
+end
+
+define :saveAudio do |file|  #this command saves the recorded audio file
+  pvalue=get(:pvalue)
+  osc_send "localhost",pvalue, "/save-recording","guid-rbn",file
+  puts "recording stopped"
+end
+
+define :stopAndSaveRecording do |file|
+  recordStop
+  saveAudio(file)
+  puts "Recording saved to #{file}"
+end
+
+
+# ===================================================================
 # START RECORDING
 
 live_loop :getStart do
@@ -114,68 +112,53 @@ end
 # FUSION DRUMS
 
 live_loop :fusionBass do
-  with_fx :reverb, mix: get(:gReverb) do
-    use_real_time
-    drumsFusion = sync "/osc*/drumsFusion"
-    set :amp, drumsFusion[0]
-    sample :drum_bass_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-  end
+  use_real_time
+  drumsFusion = sync "/osc*/drumsFusion"
+  set :amp, drumsFusion[0]
+  sample :drum_bass_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 live_loop :fusionSnare do
-  with_fx :reverb, mix: get(:gReverb) do
-    use_real_time
-    drumsFusion = sync "/osc*/drumsFusion"
-    set :amp, drumsFusion[1]
-    sample :drum_snare_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-  end
+  use_real_time
+  drumsFusion = sync "/osc*/drumsFusion"
+  set :amp, drumsFusion[1]
+  sample :drum_snare_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 live_loop :fusionTomTom1 do
-  with_fx :reverb, mix: get(:gReverb) do
-    use_real_time
-    drumsFusion = sync "/osc*/drumsFusion"
-    set :amp, drumsFusion[2]
-    sample :drum_tom_mid_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-    
-  end
+  use_real_time
+  drumsFusion = sync "/osc*/drumsFusion"
+  set :amp, drumsFusion[2]
+  sample :drum_tom_mid_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 live_loop :fusionTomTom2 do
-  with_fx :reverb, mix: get(:gReverb) do
-    use_real_time
-    drumsFusion = sync "/osc*/drumsFusion"
-    set :amp, drumsFusion[3]
-    sample :drum_tom_hi_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-  end
+  use_real_time
+  drumsFusion = sync "/osc*/drumsFusion"
+  set :amp, drumsFusion[3]
+  sample :drum_tom_hi_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 
 live_loop :fusionRide do
-  with_fx :reverb, mix: get(:gReverb) do
-    use_real_time
-    drumsFusion = sync "/osc*/drumsFusion"
-    set :amp, drumsFusion[4]
-    sample :drum_cymbal_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-  end
+  use_real_time
+  drumsFusion = sync "/osc*/drumsFusion"
+  set :amp, drumsFusion[4]
+  sample :drum_cymbal_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 live_loop :fusionHiHat do
-  with_fx :reverb, mix: get(:gReverb) do
-    use_real_time
-    drumsFusion = sync "/osc*/drumsFusion"
-    set :amp, drumsFusion[5]
-    sample :drum_cymbal_closed, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-  end
+  use_real_time
+  drumsFusion = sync "/osc*/drumsFusion"
+  set :amp, drumsFusion[5]
+  sample :drum_cymbal_closed, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 live_loop :fusionTomTom3 do
-  with_fx :reverb, mix: get(:gReverb) do
-    use_real_time
-    drumsFusion = sync "/osc*/drumsFusion"
-    set :amp, drumsFusion[6]
-    sample :drum_tom_lo_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-  end
+  use_real_time
+  drumsFusion = sync "/osc*/drumsFusion"
+  set :amp, drumsFusion[6]
+  sample :drum_tom_lo_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 
@@ -183,76 +166,60 @@ end
 # ROCK DRUMS
 
 live_loop :rockBass do
-  with_fx :distortion, mix: get(:gDistortion) do
-    use_real_time
-    drumsRock = sync "/osc*/drumsRock"
-    set :amp, drumsRock[0]
-    sample :drum_bass_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-  end
+  use_real_time
+  drumsRock = sync "/osc*/drumsRock"
+  set :amp, drumsRock[0]
+  sample :drum_bass_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 live_loop :rockSnare do
-  with_fx :distortion, mix: get(:gDistortion) do
-    use_real_time
-    drumsRock = sync "/osc*/drumsRock"
-    set :amp, drumsRock[1]
-    sample :drum_snare_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-  end
+  use_real_time
+  drumsRock = sync "/osc*/drumsRock"
+  set :amp, drumsRock[1]
+  sample :drum_snare_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 live_loop :rockTomTom1 do
-  with_fx :distortion, mix: get(:gDistortion) do
-    use_real_time
-    drumsRock = sync "/osc*/drumsRock"
-    set :amp, drumsRock[2]
-    sample :drum_tom_mid_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-  end
+  use_real_time
+  drumsRock = sync "/osc*/drumsRock"
+  set :amp, drumsRock[2]
+  sample :drum_tom_mid_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 live_loop :rockTomTom2 do
-  with_fx :distortion, mix: get(:gDistortion) do
-    use_real_time
-    drumsRock = sync "/osc*/drumsRock"
-    set :amp, drumsRock[3]
-    sample :drum_tom_hi_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-  end
+  use_real_time
+  drumsRock = sync "/osc*/drumsRock"
+  set :amp, drumsRock[3]
+  sample :drum_tom_hi_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 live_loop :rockRide do
-  with_fx :distortion, mix: get(:gDistortion) do
-    use_real_time
-    drumsRock = sync "/osc*/drumsRock"
-    set :amp, drumsRock[4]
-    sample :drum_cymbal_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-  end
+  use_real_time
+  drumsRock = sync "/osc*/drumsRock"
+  set :amp, drumsRock[4]
+  sample :drum_cymbal_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 live_loop :rockHiHat do
-  with_fx :distortion, mix: get(:gDistortion) do
-    use_real_time
-    drumsRock = sync "/osc*/drumsRock"
-    set :amp, drumsRock[5]
-    sample :drum_cymbal_closed, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-  end
+  use_real_time
+  drumsRock = sync "/osc*/drumsRock"
+  set :amp, drumsRock[5]
+  sample :drum_cymbal_closed, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 live_loop :rockTomTom3 do
-  with_fx :distortion, mix: get(:gDistortion) do
-    use_real_time
-    drumsRock = sync "/osc*/drumsRock"
-    set :amp, drumsRock[6]
-    sample :drum_tom_lo_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-  end
+  use_real_time
+  drumsRock = sync "/osc*/drumsRock"
+  set :amp, drumsRock[6]
+  sample :drum_tom_lo_hard, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 live_loop :rockCrash do
-  with_fx :distortion, mix: get(:gDistortion) do
-    use_real_time
-    drumsRock = sync "/osc*/drumsRock"
-    set :amp, drumsRock[7]
-    # sample :drum_cymbal_open, amp: get(:amp), attack: 0.2, sustain: 0.5, release: 0.7, rate: 1
-    sample :drum_cymbal_open, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
-  end
+  use_real_time
+  drumsRock = sync "/osc*/drumsRock"
+  set :amp, drumsRock[7]
+  # sample :drum_cymbal_open, amp: get(:amp), attack: 0.2, sustain: 0.5, release: 0.7, rate: 1
+  sample :drum_cymbal_open, amp: get(:amp), attack: get(:gAttack), release: get(:gRelease), sustain: get(:gSustain), rate: get(:gRate)
 end
 
 
