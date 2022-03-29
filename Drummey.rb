@@ -28,24 +28,6 @@ live_loop :getRate do
   set :gRate, setRate[0]
 end
 
-live_loop :getDistortion do
-  use_real_time
-  setDistortion = sync "/osc*/setDistortion"
-  set :gDistortion, setDistortion[0]
-end
-
-live_loop :getReverb do
-  use_real_time
-  setReverb = sync "/osc*/setReverb"
-  set :gReverb, setReverb[0]
-end
-
-live_loop :getWobble do
-  use_real_time
-  setWobble = sync "/osc*/setWobble"
-  set :gWobble, setWobble[0]
-end
-
 
 # ===================================================================
 # RECORDING
