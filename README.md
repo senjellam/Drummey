@@ -1,26 +1,28 @@
 # Drummey
 
 ## About
-Basic drum simulator with three different drum kits. To play simple press the keys for each component.
+A simple drum simulator called Drummey. Inside the program the user can choose between 3 different
+drum layouts. To play just press the displayed key on the keyboard.
+
+## Software
+To start Drummey you need Processing Version 3.5.4 and Sonic Pi Version 3.3.1. 
+First of all open Drummey.rb with Sonic Pi and run the code inside. Then open Drummey.pde 
+and start the sketch. It's necessary that the Sonic Pi code is already running before starting the 
+sketch in Processing. Otherwise the program will not work.
 
 ## To Do's
-- check whats the sound difference between j/r/f and make every drums unique
-- add reset button for sound settings
-- add fx like reverb, distortion or compressor
-- add welcome and saving message
-- only one fx to each kit
+Pending:
+- add a reset button for sound settings (future)
+- add fx like reverb, distortion or compressor (future)
 
 Finished:
-- connect Sonic Pi 🗸
-- add volume knob 🗸 and more knobs to controll and indivisualize the sound xp 🗸
+- connect Processing to Sonic Pi 🗸
 - change color scheme 🗸
-- implement mode switch buttons 🗸
-- create drum overlay (jazz 🗸, rock 🗸, fusion 🗸)
-- implement different drum kits (jazz 🗸, rock 🗸, fusion 🗸)
-- clean code in functions 🗸
+- create drum overlays (jazz, rock, fusion) 🗸
+- implement different drum layouts 🗸
+- implement buttons to switch drum layouts 🗸
+- add volume knob and more settings knobs 🗸
 - record/save function 🗸
-- check why attack does not work on crash rock 🗸
-- check values for threshold and release (attack works with 0.0 - 1.0) 🗸
 
 ## Dependencies
 - controlP5 https://sojamo.de/libraries/controlP5/
