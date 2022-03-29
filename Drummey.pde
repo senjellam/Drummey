@@ -47,13 +47,6 @@ boolean recCode = false;
 boolean showSave = false;
 int saveCode = 0;
 JSONArray pathJson;
-// ==========================================================
-// FX VISIBILITY
-/*
-boolean distortionVisibilty = false;
-boolean reverbVisibilty = false;
-boolean wobbleVisibilty = false;
-*/
 
 
 // ====================================================================================
@@ -204,61 +197,12 @@ void setup() {
      .lock()
      ;
   // ==========================================================
-  // FX TOGGLES
-  /*
-  CP5.addToggle("Distortion")
-     .setPosition(59,479)
-     .setSize(42,15)
-     .setValue(1)
-     .setMode(ControlP5.SWITCH)
-     .setColorBackground(#5b5959)
-     .setColorForeground(#cea228)
-     .setColorActive(#cea228)
-     ;
-  CP5.addToggle("Reverb")
-     .setPosition(59,444)
-     .setSize(42,15)
-     .setValue(1)
-     .setMode(ControlP5.SWITCH)
-     .setColorBackground(#5b5959)
-     .setColorForeground(#cea228)
-     .setColorActive(#cea228)
-     ;
-  CP5.addToggle("Wobble")
-     .setPosition(59,514)
-     .setSize(42,15)
-     .setValue(1)
-     .setMode(ControlP5.SWITCH)
-     .setColorBackground(#5b5959)
-     .setColorForeground(#cea228)
-     .setColorActive(#cea228)
-     ;
-  */
-  // ==========================================================
   // SETS KNOBS TO ZERO AT START
   if(startCode == false) {
-    /*
-    OscMessage setAttack = new OscMessage("/setAttack");
-    attack = 0;
-    setAttack.add(attack);
-    OP5.send(setAttack, netAdd);
-    
-    OscMessage setRelease = new OscMessage("/setRelease");
-    release = 0;
-    setRelease.add(release);
-    OP5.send(setRelease, netAdd);
-    
-    OscMessage setSustain = new OscMessage("/setSustain");
-    sustain = 0;
-    setSustain.add(sustain);
-    OP5.send(setSustain, netAdd);
-    */
-    
     OscMessage setRate = new OscMessage("/setRate");
     rate = 1;
     setRate.add(rate);
     OP5.send(setRate, netAdd);
-    
     startCode = true;
   }
 }
@@ -311,32 +255,7 @@ void draw() {
     fill(255, 0, 0);
     ellipse(837, 48, 10, 10);
   }
-  // ==========================================================
-  // DRAW SAVE PATH
-  /*
-  if(showSave == true) {
-    drawSave(recPath);
-  }
-  */
 }
-
-
-// ====================================================================================
-// DISPLAY SAVE SUCCESS
-/*
-void drawSave(String path) {
-  fill(66, 66, 66);
-  rect(50, 565, 800, 20, 5);
-  fill(224, 224, 224);
-  textSize(12);
-  text(path, 146, 579);
-  
-  fill(102,205,0);
-  textSize(12);
-  String sessionSaved = "Session Saved In:";
-  text(sessionSaved, 56, 579);
-}
-*/
 
 
 // ====================================================================================
@@ -465,41 +384,6 @@ public void Rate(float theValue) {
   setRate.add(rate);
   OP5.send(setRate, netAdd);
 }
-
-
-// ====================================================================================
-// DISTORTION TOGGLE FUNCTION
-/*
-public void Distortion(int theValue) {
-  OscMessage setDistortion = new OscMessage("/setDistortion");
-  if(theValue == 0) {
-    setDistortion.add(0);
-  } else {
-    setDistortion.add(0.5);
-  }
-  OP5.send(setDistortion, netAdd);
-}
-// REVERB TOGGLE FUNCTION
-public void Reverb(int theValue) {
-  OscMessage setReverb = new OscMessage("/setReverb");
-  if(theValue == 0) {
-    setReverb.add(0);
-  } else {
-    setReverb.add(0.5);
-  }
-  OP5.send(setReverb, netAdd);
-}
-// WOBBLE TOGGLE FUNCTION
-public void Wobble(int theValue) {
-  OscMessage setWobble = new OscMessage("/setWobble");
-  if(theValue == 0) {
-    setWobble.add(0);
-  } else {
-    setWobble.add(0.5);
-  }
-  OP5.send(setWobble, netAdd);
-}
-*/
 
 
 // ====================================================================================
