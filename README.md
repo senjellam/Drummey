@@ -4,7 +4,7 @@
 A simple drum simulator called Drummey. Inside the program the user can choose between 3 different
 drum layouts. To play just press the displayed key on the keyboard.
 
-## Software
+## Get Started
 To start Drummey you need Processing Version 3.5.4 and Sonic Pi Version 3.3.1. 
 First of all open Drummey.rb with Sonic Pi and run the code inside. Then open Drummey.pde 
 and start the sketch. It's necessary that the Sonic Pi code is already running before starting the 
@@ -24,6 +24,13 @@ Finished:
 - add volume knob and more settings knobs 🗸
 - record/save function 🗸
 
+## Software
+- Processing https://processing.org/de/
+- Sonic Pi https://sonic-pi.net/
+
 ## Dependencies
 - controlP5 https://sojamo.de/libraries/controlP5/
 - oscP5 https://sojamo.de/libraries/oscP5/
+
+## Sources
+- record/save solution https://in-thread.sonic-pi.net/t/recording-is-not-happening-with-osc-commands/4710
