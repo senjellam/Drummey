@@ -12,6 +12,9 @@ NetAddress netAdd;
 // VERSION NUMBER
 String version = "2022";
 // ==========================================================
+// APP LOGO
+PImage logo;
+// ==========================================================
 // MODE SELECT
 int switchMode = 0; // 0=Fusion 1= Rock 2=Jazz
 // ==========================================================
@@ -37,17 +40,20 @@ boolean startCode = false;
 // ==========================================================
 // RECORDING STATUS
 String recPath = "";
-String savePath = "D:/Hochschule/05_Wintersemester_2021-2022/Abschlussprojekte/Drummey/Drummey/";
+String savePath = "";
 String fileName = "Drummey_Recording_";
 boolean recStatus = false;
 boolean recCode = false;
 boolean showSave = false;
 int saveCode = 0;
+JSONArray pathJson;
 // ==========================================================
 // FX VISIBILITY
+/*
 boolean distortionVisibilty = false;
 boolean reverbVisibilty = false;
 boolean wobbleVisibilty = false;
+*/
 
 
 // ====================================================================================
@@ -59,6 +65,9 @@ void setup() {
   size(900, 600);
   frameRate(60);
   noStroke();
+  loadPath();
+  logo = loadImage("Logo.png");
+  surface.setIcon(logo);
   // ==========================================================
   // INITIALIZE OSC, CONTROLS & NETWORK
   CP5 = new ControlP5(this);
@@ -179,7 +188,24 @@ void setup() {
      .setViewStyle(Knob.ELLIPSE);
      ;
   // ==========================================================
-  // FX TOGGLES  
+  // TEXTFIELD 
+  CP5.addTextlabel("Save Path")
+     .setText(savePath)
+     //.setPosition(50,516)
+     // rect((width/2)-130, 477, 260, 73, 10);
+     .setPosition(10,578)
+     .setSize(258, 15)
+     //.setAutoClear(false)
+     .setColor(#818181)
+     .setColorBackground(#333333)
+     .setColorForeground(#5b5959)
+     .setColorActive(#cea228)
+     .setCaptionLabel("")
+     .lock()
+     ;
+  // ==========================================================
+  // FX TOGGLES
+  /*
   CP5.addToggle("Distortion")
      .setPosition(59,479)
      .setSize(42,15)
@@ -207,6 +233,7 @@ void setup() {
      .setColorForeground(#cea228)
      .setColorActive(#cea228)
      ;
+  */
   // ==========================================================
   // SETS KNOBS TO ZERO AT START
   if(startCode == false) {
@@ -269,8 +296,10 @@ void draw() {
   rect(789, 477, 60, 73, 10);
   // ==========================================================
   // MENU FOR FX
+  /*
   fill(66, 66, 66);
   rect(50, 434, 60, 116, 10);
+  */
   // ==========================================================
   // RECORDING STATUS ICON
   if(recStatus == true) {
@@ -282,10 +311,49 @@ void draw() {
     fill(255, 0, 0);
     ellipse(837, 48, 10, 10);
   }
+  // ==========================================================
   // DRAW SAVE PATH
+  /*
   if(showSave == true) {
-    // drawSave(recPath);
+    drawSave(recPath);
   }
+  */
+}
+
+
+// ====================================================================================
+// DISPLAY SAVE SUCCESS
+/*
+void drawSave(String path) {
+  fill(66, 66, 66);
+  rect(50, 565, 800, 20, 5);
+  fill(224, 224, 224);
+  textSize(12);
+  text(path, 146, 579);
+  
+  fill(102,205,0);
+  textSize(12);
+  String sessionSaved = "Session Saved In:";
+  text(sessionSaved, 56, 579);
+}
+*/
+
+
+// ====================================================================================
+// SAVE & LOAD PATH
+void setPath(String name) {
+  pathJson = new JSONArray();
+  JSONObject savepath = new JSONObject();
+  savepath.setString("path", name);
+  pathJson.setJSONObject(0, savepath);
+  saveJSONArray(pathJson, "data/savePath.json");
+  loadPath();
+}
+
+void loadPath() {
+  pathJson = loadJSONArray("/data/savePath.json");
+  JSONObject savepath = pathJson.getJSONObject(0);
+  savePath = savepath.getString("path");
 }
 
 
@@ -401,6 +469,7 @@ public void Rate(float theValue) {
 
 // ====================================================================================
 // DISTORTION TOGGLE FUNCTION
+/*
 public void Distortion(int theValue) {
   OscMessage setDistortion = new OscMessage("/setDistortion");
   if(theValue == 0) {
@@ -430,6 +499,7 @@ public void Wobble(int theValue) {
   }
   OP5.send(setWobble, netAdd);
 }
+*/
 
 
 // ====================================================================================
@@ -593,22 +663,6 @@ void keyReleased() {
   if (key == 'a' || key == 'A') playHiHat = false;
   if (key == 'l' || key == 'L') playTomTom3 = false;
   if (key == 'w' || key == 'W') playCrash = false;
-}
-
-
-// ====================================================================================
-// DISPLAY SAVE SUCCESS
-void drawSave(String path) {
-  fill(66, 66, 66);
-  rect(50, 565, 800, 20, 5);
-  fill(224, 224, 224);
-  textSize(12);
-  text(path, 146, 579);
-  
-  fill(102,205,0);
-  textSize(12);
-  String sessionSaved = "Session Saved In:";
-  text(sessionSaved, 56, 579);
 }
 
 
